@@ -1,0 +1,1866 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<title>SkillBridge — Career Readiness Portal</title>
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface-1: #fcfcfb;
+    --surface-2: #f0efec;
+    --text-primary: #0b0b0b;
+    --text-secondary: #52514e;
+    --text-muted: #898781;
+    --grid: #e1e0d9;
+    --axis: #c3c2b7;
+    --border: rgba(11,11,11,0.10);
+    --series-1: #2a78d6;
+    --series-1-soft: #cde2fb;
+    --accent: #2a78d6;
+    --good: #0ca30c;
+    --good-text: #006300;
+    --warning: #fab219;
+    --critical: #d03b3b;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 16px rgba(0,0,0,.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:where(:not([data-theme="light"])) {
+      color-scheme: dark;
+      --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #262624;
+      --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+      --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+      --series-1: #3987e5; --series-1-soft: #184f95; --accent: #3987e5;
+      --good-text: #0ca30c; --shadow: none;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d; --surface-1: #1a1a19; --surface-2: #262624;
+    --text-primary: #f0efec; --text-secondary: #c3c2b7; --text-muted: #898781;
+    --grid: #2c2c2a; --axis: #383835; --border: rgba(255,255,255,0.10);
+    --series-1: #3987e5; --series-1-soft: #184f95; --accent: #3987e5;
+    --good-text: #0ca30c; --shadow: none;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 72px; }
+  body {
+    margin: 0; background: var(--page); color: var(--text-primary);
+    font: 14px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  a { color: var(--accent); }
+
+  /* ---------- Header / nav ---------- */
+  header {
+    position: sticky; top: 0; z-index: 20;
+    background: color-mix(in srgb, var(--surface-1) 88%, transparent);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--border);
+  }
+  .bar { max-width: 1180px; margin: 0 auto; padding: 12px 24px; display: flex; align-items: center; gap: 24px; }
+  .brand { font-weight: 650; font-size: 16px; white-space: nowrap; }
+  .brand span { color: var(--text-muted); font-weight: 400; }
+  nav { display: flex; gap: 4px; flex: 1; overflow-x: auto; }
+  nav a {
+    color: var(--text-secondary); text-decoration: none; padding: 6px 10px; border-radius: 6px; white-space: nowrap;
+  }
+  nav a:hover { background: var(--surface-2); color: var(--text-primary); }
+  .actions { display: flex; gap: 8px; }
+
+  /* ---------- Layout ---------- */
+  main { max-width: 1180px; margin: 0 auto; padding: 24px; }
+  section { margin-bottom: 40px; }
+  h2 { font-size: 20px; margin: 0 0 4px; font-weight: 650; }
+  .lede { color: var(--text-secondary); margin: 0 0 16px; }
+  .card {
+    background: var(--surface-1); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px; box-shadow: var(--shadow);
+  }
+  .grid { display: grid; gap: 16px; }
+  .g2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+  .g3 { grid-template-columns: repeat(3, minmax(0,1fr)); }
+  .g4 { grid-template-columns: repeat(4, minmax(0,1fr)); }
+  @media (max-width: 860px) { .g2, .g3, .g4 { grid-template-columns: 1fr; } .bar { flex-wrap: wrap; } }
+
+  /* ---------- Forms ---------- */
+  label { display: block; font-size: 12px; font-weight: 550; color: var(--text-secondary); margin-bottom: 4px; }
+  input, select, textarea {
+    width: 100%; font: inherit; color: var(--text-primary);
+    background: var(--surface-1); border: 1px solid var(--axis); border-radius: 8px; padding: 8px 10px;
+  }
+  input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  input[type=file] { padding: 6px; background: var(--surface-2); }
+  .field { margin-bottom: 12px; }
+  .hint { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  .sub-h { font-size: 14px; font-weight: 650; margin: 0 0 12px; }
+
+  button, .btn {
+    font: inherit; font-weight: 550; cursor: pointer; border-radius: 8px; padding: 8px 14px;
+    border: 1px solid var(--axis); background: var(--surface-1); color: var(--text-primary);
+    display: inline-flex; align-items: center; gap: 6px; text-decoration: none; white-space: nowrap;
+  }
+  button:hover, .btn:hover { background: var(--surface-2); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  button.primary:hover { filter: brightness(1.08); background: var(--accent); }
+  button.ghost { border-color: transparent; background: transparent; color: var(--text-secondary); padding: 4px 8px; }
+  button.ghost:hover { background: var(--surface-2); color: var(--text-primary); }
+  button.small { padding: 4px 10px; font-size: 12px; }
+  .row { display: flex; gap: 8px; align-items: end; flex-wrap: wrap; }
+  .row > .field { flex: 1; min-width: 120px; }
+
+  .sgpa-grid { display: grid; grid-template-columns: repeat(8, minmax(0,1fr)); gap: 8px; }
+  @media (max-width: 860px) { .sgpa-grid { grid-template-columns: repeat(4, 1fr); } }
+
+  /* ---------- Lists ---------- */
+  table.list { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.list th { text-align: left; font-weight: 550; color: var(--text-muted); font-size: 12px; padding: 6px 8px; border-bottom: 1px solid var(--grid); }
+  table.list td { padding: 8px; border-bottom: 1px solid var(--grid); }
+  table.list td.num, table.list th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .scroll { max-height: 320px; overflow: auto; }
+  .empty { color: var(--text-muted); font-size: 13px; padding: 16px 0; text-align: center; }
+
+  .certs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+  .cert {
+    border: 1px solid var(--border); border-radius: 10px; padding: 12px; background: var(--surface-2);
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .cert .t { font-weight: 600; }
+  .cert .m { font-size: 12px; color: var(--text-secondary); }
+  .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--surface-1); border: 1px solid var(--border); color: var(--text-secondary); }
+  .cert .acts { display: flex; gap: 4px; margin-top: 6px; }
+
+  .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .tag { display: inline-flex; align-items: center; gap: 4px; padding: 3px 4px 3px 10px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-size: 12px; }
+  .tag button { border: 0; background: none; padding: 0 4px; color: var(--text-muted); font-size: 14px; line-height: 1; }
+
+  /* ---------- Dashboard ---------- */
+  .tile { padding: 16px 18px; }
+  .tile .k { font-size: 12px; color: var(--text-secondary); font-weight: 550; }
+  .tile .v { font-size: 30px; font-weight: 650; line-height: 1.2; margin-top: 4px; }
+  .tile .v small { font-size: 14px; color: var(--text-muted); font-weight: 450; }
+  .tile .s { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .meter { height: 6px; background: var(--grid); border-radius: 999px; margin-top: 10px; overflow: hidden; }
+  .meter > div { height: 100%; background: var(--series-1); border-radius: 999px; }
+  .status { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 550; margin-top: 2px; }
+
+  .chart-card { padding: 18px 18px 12px; }
+  .chart-head { display: flex; justify-content: space-between; align-items: start; gap: 8px; margin-bottom: 8px; }
+  .chart-head h3 { margin: 0; font-size: 14px; font-weight: 650; }
+  .chart-head p { margin: 2px 0 0; font-size: 12px; color: var(--text-muted); }
+  .chart { width: 100%; position: relative; }
+  .chart svg { display: block; width: 100%; overflow: visible; }
+  .chart text { font-family: inherit; }
+  .chart .tick { fill: var(--text-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+  .chart .lbl { fill: var(--text-secondary); font-size: 12px; }
+  .chart .dlabel { fill: var(--text-primary); font-size: 12px; font-weight: 600; }
+  .chart .hit { fill: transparent; cursor: default; }
+  .chart .hit:focus { outline: none; }
+  .chart .bar-g:hover .mark, .chart .bar-g:focus .mark { filter: brightness(1.12); }
+  .chart .bar-g:focus-visible .hit { stroke: var(--accent); stroke-width: 2; }
+  .chart-empty { height: 200px; display: grid; place-items: center; color: var(--text-muted); font-size: 13px; text-align: center; border: 1px dashed var(--grid); border-radius: 8px; }
+  .data-table { margin-top: 8px; display: none; }
+  .data-table.open { display: block; }
+
+  #tooltip {
+    position: fixed; pointer-events: none; z-index: 50; opacity: 0; transition: opacity .1s;
+    background: var(--surface-1); color: var(--text-primary); border: 1px solid var(--border);
+    box-shadow: 0 4px 20px rgba(0,0,0,.14); border-radius: 8px; padding: 8px 10px; font-size: 12px; min-width: 120px;
+  }
+  #tooltip .tt-h { color: var(--text-muted); margin-bottom: 2px; }
+  #tooltip .tt-v { font-weight: 650; font-size: 14px; }
+  #tooltip .sw { display: inline-block; width: 8px; height: 8px; border-radius: 2px; background: var(--series-1); margin-right: 6px; }
+
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px); opacity: 0;
+    background: var(--text-primary); color: var(--surface-1); padding: 10px 16px; border-radius: 8px;
+    transition: all .2s; z-index: 60; font-size: 13px; pointer-events: none;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .profile-head { display: flex; align-items: center; gap: 16px; margin-bottom: 16px; }
+  .avatar { width: 56px; height: 56px; border-radius: 50%; background: var(--series-1); color: #fff; display: grid; place-items: center; font-size: 20px; font-weight: 650; flex: none; }
+  .profile-head .n { font-size: 18px; font-weight: 650; }
+  .profile-head .d { color: var(--text-secondary); font-size: 13px; }
+
+  @media print {
+    header, .no-print, form, .actions, button { display: none !important; }
+    section:not(#dashboard) { display: none; }
+    .card { box-shadow: none; break-inside: avoid; }
+    body { background: #fff; }
+  }
+
+body{font-family:'Figtree',system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14.5px}
+[hidden]{display:none!important}
+.disp{font-family:'Fraunces',Georgia,serif;font-weight:600;letter-spacing:-.015em}
+h2.disp{font-size:26px}
+.brand span{background:var(--surface-2);padding:2px 9px;border-radius:99px;font-size:12px;margin-left:6px;color:var(--text-secondary)}
+.who{font-size:13px;color:var(--text-secondary);align-self:center;white-space:nowrap}
+.head{display:flex;justify-content:space-between;align-items:end;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+#app-faculty{--accent:#0f8f7f;--series-1:#0f8f7f}
+#app-admin{--accent:#6a50d3;--series-1:#6a50d3}
+/* login */
+#login{--role:#2a78d6;min-height:100vh;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+#login[data-role=faculty]{--role:#0f8f7f}#login[data-role=admin]{--role:#6a50d3}
+.l-art{position:relative;overflow:hidden;color:#fff;padding:44px 56px;display:flex;flex-direction:column;justify-content:space-between;background:linear-gradient(155deg,#071c38,#0e3a6d 60%,#1a5fae)}
+.l-art h1{font-size:clamp(30px,3.5vw,46px);line-height:1.12;margin:0 0 14px;max-width:14em}
+.l-art p{color:#c4d6ec;max-width:33em;font-size:16px;margin:0}
+.l-art svg{width:min(400px,82%);align-self:center;margin:20px 0 6px}
+.l-art .cap{text-align:center;font-size:12px;color:#9fb8d6}
+.l-art .foot{font-size:13px;color:#9fb8d6}
+.l-brand{font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center}
+.l-brand i{width:30px;height:30px;border-radius:9px;background:#fff;color:#0e3a6d;display:grid;place-items:center;font-style:normal;font-weight:800}
+.l-form{display:grid;place-items:center;padding:32px 24px;background:var(--page)}
+.l-box{width:100%;max-width:410px}
+.l-box h2{font-size:28px;margin:0 0 6px}
+.seg{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--surface-2);padding:4px;border-radius:12px;margin:20px 0 18px}
+.seg button{border:0;background:transparent;justify-content:center;padding:9px 6px;border-radius:9px;color:var(--text-secondary)}
+.seg button[aria-selected=true]{background:var(--surface-1);color:var(--role);box-shadow:var(--shadow)}
+.pw{position:relative}.pw button{position:absolute;right:4px;top:3px;padding:4px 8px;font-size:12px}
+#login input:focus,#login button:focus-visible{outline-color:var(--role)}
+.go{width:100%;justify-content:center;padding:11px;background:var(--role);border-color:var(--role);color:#fff;font-size:15px;margin-top:6px}
+.go:hover{background:var(--role);filter:brightness(1.1)}
+#lErr{color:var(--critical);font-size:13px;min-height:20px;margin-top:10px}
+.demo{margin-top:18px;border:1px solid var(--border);border-radius:12px;overflow:hidden}
+.demo p{margin:0;padding:9px 14px;font-size:12px;font-weight:600;color:var(--text-secondary);background:var(--surface-2)}
+.demo button{width:100%;border:0;border-top:1px solid var(--grid);border-radius:0;background:var(--surface-1);justify-content:space-between;font-weight:450;font-size:13px;padding:9px 14px}
+.demo code{color:var(--text-secondary);font-size:12px}
+@media(max-width:860px){#login{grid-template-columns:1fr}.l-art{padding:26px}.l-art svg,.l-art .cap{display:none}}
+/* shared widgets */
+.hb{display:grid;grid-template-columns:minmax(90px,150px) 1fr 42px;gap:10px;align-items:center;padding:5px 0;font-size:13px}
+.hb .tr{position:relative;height:10px;background:var(--grid);border-radius:99px}
+.hb .tr i{display:block;height:100%;background:var(--accent);border-radius:99px}
+.hb .tr u{position:absolute;top:-4px;width:2px;height:18px;background:var(--text-primary);opacity:.65}
+.hb b{text-align:right;font-variant-numeric:tabular-nums}
+.hist{display:flex;align-items:end;gap:10px;height:180px}
+.hist div{flex:1;display:flex;flex-direction:column;justify-content:end;align-items:center;height:100%;font-size:12px;color:var(--text-secondary);gap:4px}
+.hist i{display:block;width:100%;border-radius:6px 6px 0 0;background:var(--accent);min-height:3px}
+.hist i.low{background:var(--critical)}
+.donut{width:150px;height:150px;border-radius:50%;position:relative;flex:none}
+.donut::after{content:'';position:absolute;inset:28px;background:var(--surface-1);border-radius:50%}
+.legend{display:grid;gap:7px;font-size:13px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:8px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:550;border:1px solid var(--border);background:var(--surface-2)}
+.chip.ok{color:var(--good-text);border-color:var(--good)}.chip.no{color:var(--critical);border-color:var(--critical);background:transparent}
+.ring{--p:0;width:72px;height:72px;border-radius:50%;background:conic-gradient(var(--accent) calc(var(--p)*1%),var(--grid) 0);display:grid;place-items:center;position:relative;flex:none}
+.ring::before{content:'';position:absolute;inset:8px;background:var(--surface-1);border-radius:50%}.ring b{position:relative;font-size:16px}
+.gap-top{display:flex;gap:16px;align-items:center;margin-bottom:14px}
+.mm{display:inline-block;width:64px;height:6px;background:var(--grid);border-radius:99px;vertical-align:middle;margin-right:8px;overflow:hidden}.mm i{display:block;height:100%;background:var(--accent)}
+.pill.ok{color:var(--good-text);border-color:var(--good)}.pill.warn{color:var(--text-primary);border-color:var(--warning)}.pill.bad{color:var(--critical);border-color:var(--critical)}
+tr[data-id]{cursor:pointer}tr[data-id]:hover{background:var(--surface-2)}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;align-items:center}.tools input{max-width:260px}.tools select{width:auto}
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(440px,100%);background:var(--surface-1);border-left:1px solid var(--border);box-shadow:-12px 0 40px rgba(0,0,0,.18);padding:22px;overflow:auto;transform:translateX(105%);transition:transform .22s;z-index:40}
+#drawer.open{transform:none}
+.dr-h{display:flex;justify-content:space-between;gap:8px;margin-bottom:14px}.dr-h h3{margin:0;font-size:20px}
+#drawer .sub-h{margin-top:18px}#drawer ul{margin:0;padding-left:18px;color:var(--text-secondary)}
+.note{border-left:3px solid var(--accent);padding:2px 10px;margin:8px 0;font-size:13px}.note small{color:var(--text-muted);display:block}
+.sample{font-size:12px;color:var(--text-muted)}
+@media(prefers-reduced-motion:reduce){#drawer{transition:none}}
+#notifPanel{position:fixed;top:58px;right:16px;width:min(340px,calc(100% - 32px));max-height:70vh;overflow:auto;background:var(--surface-1);border:1px solid var(--border);border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,.18);padding:14px;z-index:40}
+.note.unread{background:var(--surface-2)}#skillTags{display:block}
+.sk{display:grid;grid-template-columns:1fr 125px 1.3fr 26px;gap:6px;align-items:center;margin:6px 0}.sk input,.sk select{padding:5px 8px;font-size:12px}
+details summary{cursor:pointer;margin:8px 0;font-size:13px}
+
+/* ---------- Header / tabs (refined) ---------- */
+header{box-shadow:0 1px 0 var(--border),0 6px 20px -12px rgba(0,0,0,.18)}
+.bar{padding:10px 24px;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;letter-spacing:-.01em;color:var(--text-primary)}
+.brand::before{content:'P';display:grid;place-items:center;width:30px;height:30px;border-radius:9px;color:#fff;font-weight:700;font-size:15px;background:linear-gradient(135deg,var(--accent),color-mix(in srgb,var(--accent) 50%,#7c3aed));box-shadow:0 2px 8px color-mix(in srgb,var(--accent) 40%,transparent)}
+.brand span{font-size:10.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--surface-2);color:var(--text-secondary);border:1px solid var(--border)}
+nav{flex:0 1 auto;margin-right:auto;gap:2px;padding:3px;background:var(--surface-2);border:1px solid var(--border);border-radius:11px;overflow-x:auto;scrollbar-width:none}
+nav::-webkit-scrollbar{display:none}
+nav a{position:relative;padding:7px 15px;border-radius:8px;font-size:13.5px;font-weight:500;color:var(--text-secondary);transition:background .15s,color .15s,box-shadow .15s}
+nav a:hover{background:color-mix(in srgb,var(--surface-1) 60%,transparent);color:var(--text-primary)}
+nav a.on{background:var(--surface-1);color:var(--accent);font-weight:650;box-shadow:0 1px 2px rgba(0,0,0,.08),0 0 0 1px var(--border)}
+nav a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.actions{align-items:center;gap:6px;flex-wrap:nowrap}
+.actions .who{font-size:12.5px;font-weight:500;padding:6px 12px;border-radius:999px;background:var(--surface-2);border:1px solid var(--border);color:var(--text-primary);white-space:nowrap}
+.actions button[data-bell]{width:34px;height:34px;padding:0;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;gap:1px;background:var(--surface-2);border:1px solid var(--border)}
+.actions button{border-radius:8px}
+@media(max-width:860px){.bar{flex-wrap:wrap;gap:10px 12px;padding:10px 16px}nav{order:3;width:100%;margin:0}.actions{margin-left:auto;flex-wrap:wrap}}
+#themeBtn{width:34px;height:34px;padding:0;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);font-size:15px;display:inline-flex;align-items:center;justify-content:center}
+#exportBtn,.actions label.btn{border-color:transparent;background:transparent;color:var(--text-secondary)!important;padding:5px 8px}
+#exportBtn:hover,.actions label.btn:hover{background:var(--surface-2);color:var(--text-primary)!important}
+nav a{padding:7px 12px}
+#themeBtn,.actions button[data-toggle-theme]{width:34px;height:34px;padding:0;border-radius:50%;background:var(--surface-2);border:1px solid var(--border);display:inline-flex;align-items:center;justify-content:center;font-size:18px;line-height:1}
+#app-student .brand span{display:none}
+.bar{gap:16px}
+@media(prefers-reduced-motion:reduce){nav a{transition:none}}
+
+/* ---------- Visual refresh: one page per tab, sub-tabs, softer look ---------- */
+body{background:radial-gradient(1100px 420px at 12% -8%,color-mix(in srgb,var(--accent) 13%,transparent),transparent 70%),radial-gradient(900px 380px at 100% 0,color-mix(in srgb,var(--good) 8%,transparent),transparent 70%),var(--page);background-attachment:fixed}
+main{max-width:1120px;padding:32px 28px 64px}
+main>section{display:none;margin-bottom:0}
+main>section.show{display:block;animation:pgIn .35s ease both}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+main>section>h2,.head h2{font-size:28px;letter-spacing:-.02em}
+.lede{max-width:62ch;margin-bottom:22px}
+.card{border-radius:16px;box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 30px -18px rgba(20,40,90,.28)}
+.grid{gap:20px}
+.chart-card{padding:22px}
+.tile{position:relative;overflow:hidden;padding:20px 22px;border-radius:16px}
+.tile::before{content:"";position:absolute;left:0;top:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 25%,var(--good)))}
+.tile .v{font-size:34px;letter-spacing:-.02em}
+.head{padding:24px 28px;border-radius:20px;margin-bottom:22px;background:linear-gradient(120deg,color-mix(in srgb,var(--accent) 14%,var(--surface-1)),var(--surface-1) 70%);border:1px solid var(--border)}
+.seg{display:inline-flex;gap:4px;padding:4px;margin:0 0 22px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;max-width:100%;overflow-x:auto}
+.seg-b{background:transparent;border:0;color:var(--text-secondary);padding:8px 16px;border-radius:9px;font-weight:550;font-size:13.5px;white-space:nowrap;cursor:pointer;box-shadow:none}
+.seg-b:hover{color:var(--text-primary)}
+.seg-b.on{background:var(--surface-1);color:var(--accent);font-weight:650;box-shadow:0 1px 3px rgba(0,0,0,.12),0 0 0 1px var(--border)}
+.pane{display:none}.pane.show{display:block;animation:pgIn .3s ease both}
+.pane>.card:first-child{margin-top:0!important}
+@media print{main>section#dashboard{display:block!important}.pane{display:block!important}.seg{display:none!important}}
+@media(prefers-reduced-motion:reduce){main>section.show,.pane.show{animation:none}}
+
+/* ---------- Readiness badges ---------- */
+.badge-sprite{position:absolute;width:0;height:0;overflow:hidden}
+.bchip{display:inline-flex;align-items:center;gap:4px;padding:1px 8px 1px 5px;border-radius:999px;font-size:11.5px;font-weight:650;vertical-align:middle;border:1px solid transparent;margin-left:6px;white-space:nowrap}
+.bchip-gold{background:#fff6d6;color:#7a5600;border-color:#f0d27a}.bchip-silver{background:#f0f2f5;color:#4d5663;border-color:#cfd5de}
+.bchip-bronze{background:#fbeadb;color:#7a4412;border-color:#e4b88f}.bchip-none{background:var(--surface-2);color:var(--text-muted);border-color:var(--border);padding-left:8px}
+.bd-gold{--bd:#e6b422}.bd-silver{--bd:#9aa3af}.bd-bronze{--bd:#cd7f32}.bd-none{--bd:#8a8f98;color:var(--text-muted)}
+.bd-hero{display:flex;align-items:center;gap:14px;padding:10px 20px 10px 14px;border-radius:18px;background:linear-gradient(135deg,color-mix(in srgb,var(--bd) 24%,transparent),transparent 80%);border:1px solid color-mix(in srgb,var(--bd) 50%,transparent)}
+.bd-hero .bdg{filter:drop-shadow(0 6px 10px rgba(0,0,0,.28));animation:bdPop .7s cubic-bezier(.2,1.4,.4,1) both}
+@keyframes bdPop{from{transform:scale(.6) rotate(-8deg);opacity:0}to{transform:none;opacity:1}}
+.bd-t{font-size:19px;font-weight:700;letter-spacing:-.01em;color:var(--text-primary)}.bd-s{font-size:12.5px;color:var(--text-secondary)}
+.bd-meter{height:6px;width:150px;border-radius:3px;background:var(--surface-2);overflow:hidden;margin-top:7px}.bd-meter i{display:block;height:100%;background:var(--bd);border-radius:3px}
+.bd-banner{display:flex;flex-wrap:wrap;gap:20px;align-items:center;margin-bottom:20px}.bd-banner .hint{flex:1;min-width:220px;margin:0}
+.bstrip{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.bs{display:flex;align-items:center;gap:10px;padding:8px 16px 8px 12px;border-radius:14px;background:var(--surface-1);border:1px solid var(--border);color:var(--text-primary);cursor:pointer;font:inherit;box-shadow:none;text-align:left}
+.bs b{display:block;font-size:20px;line-height:1.1}.bs small{color:var(--text-muted);font-size:12px}.bs:hover{border-color:var(--accent)}.bs.on{outline:2px solid var(--accent)}
+.bs-dot{width:22px;height:22px;border-radius:50%;border:2px dashed var(--text-muted);flex:none}.bs.clear{background:transparent;color:var(--accent);border-style:dashed}
+@media(prefers-reduced-motion:reduce){.bd-hero .bdg{animation:none}}
+</style>
+</head>
+<body>
+<svg class="badge-sprite" aria-hidden="true" focusable="false"><defs><linearGradient id="bg-r-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff4b0"/><stop offset=".5" stop-color="#e0a800"/><stop offset="1" stop-color="#8f6400"/></linearGradient><linearGradient id="bg-d-gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe685"/><stop offset=".5" stop-color="#f2b705"/><stop offset="1" stop-color="#a97500"/></linearGradient><linearGradient id="bg-s-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fffbe0"/><stop offset="1" stop-color="#fdd75a"/></linearGradient><linearGradient id="bg-rb-gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e0525d"/><stop offset="1" stop-color="#9e1f2c"/></linearGradient><symbol id="bdg-gold" viewBox="0 0 64 80"><path d="M18 44 9 75l14-8 7 10 5-30z" fill="url(#bg-rb-gold)"/><path d="M46 44l9 31-14-8-7 10-5-30z" fill="url(#bg-rb-gold)" opacity=".9"/><circle cx="32" cy="30" r="27" fill="url(#bg-r-gold)"/><circle cx="32" cy="30" r="22.5" fill="url(#bg-d-gold)" stroke="rgba(0,0,0,.18)"/><circle cx="32" cy="30" r="19" fill="none" stroke="rgba(255,255,255,.55)" stroke-dasharray="1.5 2.5"/><polygon points="32,19 34.7,26.3 42.5,26.6 36.4,31.4 38.5,38.9 32,34.6 25.5,38.9 27.6,31.4 21.5,26.6 29.3,26.3" fill="url(#bg-s-gold)" stroke="rgba(0,0,0,.25)" stroke-width=".8" stroke-linejoin="round"/><path d="M13 20A21 21 0 0 1 34 9" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/></symbol><linearGradient id="bg-r-silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".5" stop-color="#bfc6d0"/><stop offset="1" stop-color="#7d8591"/></linearGradient><linearGradient id="bg-d-silver" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6f8fb"/><stop offset=".5" stop-color="#c3cad4"/><stop offset="1" stop-color="#8d95a1"/></linearGradient><linearGradient id="bg-s-silver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset="1" stop-color="#e4e8ee"/></linearGradient><linearGradient id="bg-rb-silver" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5b86e0"/><stop offset="1" stop-color="#2c4fa0"/></linearGradient><symbol id="bdg-silver" viewBox="0 0 64 80"><path d="M18 44 9 75l14-8 7 10 5-30z" fill="url(#bg-rb-silver)"/><path d="M46 44l9 31-14-8-7 10-5-30z" fill="url(#bg-rb-silver)" opacity=".9"/><circle cx="32" cy="30" r="27" fill="url(#bg-r-silver)"/><circle cx="32" cy="30" r="22.5" fill="url(#bg-d-silver)" stroke="rgba(0,0,0,.18)"/><circle cx="32" cy="30" r="19" fill="none" stroke="rgba(255,255,255,.55)" stroke-dasharray="1.5 2.5"/><polygon points="32,19 34.7,26.3 42.5,26.6 36.4,31.4 38.5,38.9 32,34.6 25.5,38.9 27.6,31.4 21.5,26.6 29.3,26.3" fill="url(#bg-s-silver)" stroke="rgba(0,0,0,.25)" stroke-width=".8" stroke-linejoin="round"/><path d="M13 20A21 21 0 0 1 34 9" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/></symbol><linearGradient id="bg-r-bronze" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffd9b3"/><stop offset=".5" stop-color="#cd7f32"/><stop offset="1" stop-color="#7a3f12"/></linearGradient><linearGradient id="bg-d-bronze" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f6bd8a"/><stop offset=".5" stop-color="#cf8240"/><stop offset="1" stop-color="#8f4f1a"/></linearGradient><linearGradient id="bg-s-bronze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffe9d3"/><stop offset="1" stop-color="#f1b27a"/></linearGradient><linearGradient id="bg-rb-bronze" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#42b384"/><stop offset="1" stop-color="#1d6e4d"/></linearGradient><symbol id="bdg-bronze" viewBox="0 0 64 80"><path d="M18 44 9 75l14-8 7 10 5-30z" fill="url(#bg-rb-bronze)"/><path d="M46 44l9 31-14-8-7 10-5-30z" fill="url(#bg-rb-bronze)" opacity=".9"/><circle cx="32" cy="30" r="27" fill="url(#bg-r-bronze)"/><circle cx="32" cy="30" r="22.5" fill="url(#bg-d-bronze)" stroke="rgba(0,0,0,.18)"/><circle cx="32" cy="30" r="19" fill="none" stroke="rgba(255,255,255,.55)" stroke-dasharray="1.5 2.5"/><polygon points="32,19 34.7,26.3 42.5,26.6 36.4,31.4 38.5,38.9 32,34.6 25.5,38.9 27.6,31.4 21.5,26.6 29.3,26.3" fill="url(#bg-s-bronze)" stroke="rgba(0,0,0,.25)" stroke-width=".8" stroke-linejoin="round"/><path d="M13 20A21 21 0 0 1 34 9" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="3" stroke-linecap="round"/></symbol><symbol id="bdg-none" viewBox="0 0 64 80"><circle cx="32" cy="30" r="26" fill="none" stroke="currentColor" stroke-width="2.5" stroke-dasharray="5 5" opacity=".5"/><polygon points="32,19 34.7,26.3 42.5,26.6 36.4,31.4 38.5,38.9 32,34.6 25.5,38.9 27.6,31.4 21.5,26.6 29.3,26.3" fill="none" stroke="currentColor" stroke-width="2" opacity=".4"/></symbol></defs></svg>
+
+<div id="login" data-role="student">
+  <div class="l-art">
+    <div class="l-brand"><i>S</i>SkillBridge</div>
+    <div>
+      <h1 class="disp">Close the gap between your degree and your first offer.</h1>
+      <p>Skill gap analysis and career readiness for engineering students, the faculty who mentor them, and the teams who run career services.</p>
+    </div>
+    <svg viewBox="0 0 300 280" role="img" aria-label="Radar chart comparing a student's skills with employer demand" font-family="Figtree,system-ui,sans-serif" font-size="11" fill="#c4d6ec">
+      <g fill="none" stroke="rgba(255,255,255,.2)"><polygon points="150,30 245,85 245,195 150,250 55,195 55,85"/><polygon points="150,67 213,103 213,177 150,213 87,177 87,103"/><polygon points="150,103 182,121 182,159 150,177 118,159 118,121"/><path d="M150,140V30M150,140L245,85M150,140L245,195M150,140V250M150,140L55,195M150,140L55,85"/></g>
+      <polygon points="150,40 237,90 237,190 150,240 63,190 63,90" fill="none" stroke="#fff" stroke-opacity=".75" stroke-dasharray="5 4" stroke-width="1.5"/>
+      <polygon points="150,46 217,102 188,162 150,222 98,170 64,90" fill="#6fb1ff" fill-opacity=".38" stroke="#a9d3ff" stroke-width="2"/>
+      <g stroke="none"><text x="150" y="20" text-anchor="middle">Data structures</text><text x="253" y="86">SQL</text><text x="253" y="204">Cloud</text><text x="150" y="268" text-anchor="middle">System design</text><text x="47" y="204" text-anchor="end">Testing</text><text x="47" y="86" text-anchor="end">Python</text></g>
+    </svg>
+    <div class="cap">Dashed outline: what employers ask for. Filled area: what the student has.</div>
+    <div class="foot">One portal for students, faculty and administrators.</div>
+  </div>
+  <div class="l-form"><div class="l-box">
+    <h2 class="disp">Sign in</h2>
+    <div class="hint" style="font-size:14px;margin:0">Choose your role, then enter the credentials issued by your college.</div>
+    <div class="seg" role="tablist" aria-label="Sign in as">
+      <button type="button" role="tab" data-r="student" aria-selected="true">Student</button>
+      <button type="button" role="tab" data-r="faculty" aria-selected="false">Faculty</button>
+      <button type="button" role="tab" data-r="admin" aria-selected="false">Administrator</button>
+    </div>
+    <form id="lForm" autocomplete="off">
+      <div class="field"><label for="lUser">Username</label><input id="lUser" required autocapitalize="none" spellcheck="false"></div>
+      <div class="field"><label for="lPass">Password</label><div class="pw"><input id="lPass" type="password" required><button type="button" class="ghost" id="pwTog">Show</button></div></div>
+      <button class="go" type="submit">Sign in</button>
+      <div id="lErr" role="alert"></div>
+    </form>
+    <div class="hint" id="regLink" style="margin-top:14px;font-size:13px">New student? <a href="#" id="showReg">Create your account</a></div>
+    <form id="rForm" autocomplete="off" hidden>
+      <p class="sub-h" style="margin-top:6px">Create student account</p>
+      <div class="field"><label for="rName">Full name</label><input id="rName" required></div>
+      <div class="row"><div class="field"><label for="rRoll">Roll / Register no.</label><input id="rRoll" required></div>
+      <div class="field"><label for="rDept">Department</label><select id="rDept"><option value="CSE">Computer Science &amp; Engg.</option><option value="IT">Information Technology</option><option value="ECE">Electronics &amp; Comm.</option><option value="EEE">Electrical &amp; Electronics</option><option value="ME">Mechanical Engg.</option></select></div></div>
+      <div class="field"><label for="rUser">Username</label><input id="rUser" required autocapitalize="none" spellcheck="false"></div>
+      <div class="field"><label for="rPass">Password (8+ characters)</label><input id="rPass" type="password" required></div>
+      <button class="go" type="submit">Create account</button>
+      <div id="rErr" role="alert" style="color:var(--critical);font-size:13px;min-height:20px;margin-top:10px"></div>
+      <div class="hint"><a href="#" id="hideReg">Back to sign in</a></div>
+    </form>
+    <div class="demo"><p>Demo accounts. Select one to fill the form.</p><div id="demoList"></div></div>
+  </div></div>
+</div>
+<div id="app-student" hidden>
+
+<header>
+  <div class="bar">
+    <div class="brand">SkillBridge <span>Student</span></div>
+    <nav>
+      <a href="#profile">Profile</a>
+      <a href="#academics">Academics</a>
+      <a href="#marks">Marks</a>
+      <a href="#certificates">Certificates</a>
+      <a href="#placement">Career</a>
+      <a href="#dashboard">Dashboard</a>
+      <a href="#analytics">Analytics</a>
+      <a href="#drives">Opportunities</a>
+      <a href="#prep">Interview prep</a>
+      <a href="#calendar">Calendar</a>
+    </nav>
+    <div class="actions">
+      <button class="ghost" data-bell aria-label="Notifications">🔔<sup data-badge style="color:var(--critical);font-weight:700"></sup></button><span class="who" data-who></span><button class="small" data-logout>Sign out</button><button class="ghost" id="themeBtn" title="Toggle theme" aria-label="Toggle dark mode">◐</button>
+      <button class="small" id="exportBtn" title="Download your data as JSON">Export</button>
+      <label class="btn small" style="margin:0;font-size:12px;color:var(--text-primary)" title="Load data from a JSON export">
+        Import<input type="file" id="importFile" accept=".json" hidden>
+      </label>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= PROFILE ================= -->
+  <section id="profile">
+    <h2>Student profile</h2>
+    <p class="lede">Basic details recruiters see first. Everything saves automatically in this browser.</p>
+    <div class="card bd-banner" id="profileBadge"></div>
+    <div class="card">
+      <div class="grid g3">
+        <div class="field"><label for="p-name">Full name</label><input id="p-name" data-bind="profile.name" placeholder="e.g. Ananya Sharma"></div>
+        <div class="field"><label for="p-roll">Roll / Register no.</label><input id="p-roll" data-bind="profile.roll" placeholder="21CS1043"></div>
+        <div class="field"><label for="p-branch">Branch / Department</label><select id="p-branch" data-bind="profile.branch"><option value="">— Select —</option><option>Computer Science &amp; Engg.</option><option>Information Technology</option><option>Electronics &amp; Comm.</option><option>Electrical &amp; Electronics</option><option>Mechanical Engg.</option></select></div>
+        <div class="field"><label for="p-batch">Graduating batch</label><input id="p-batch" data-bind="profile.batch" placeholder="2026"></div>
+        <div class="field"><label for="p-email">Email</label><input id="p-email" type="email" data-bind="profile.email" placeholder="you@college.edu"></div>
+        <div class="field"><label for="p-phone">Phone</label><input id="p-phone" type="tel" data-bind="profile.phone" placeholder="+91 98xxxxxx"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ACADEMICS ================= -->
+  <section id="academics">
+    <h2>Academic record</h2>
+    <p class="lede">Overall CGPA, school scores and semester-wise SGPA (on a 10-point scale).</p>
+    <div class="card">
+      <div class="grid g4">
+        <div class="field"><label for="a-cgpa">Current CGPA</label><input id="a-cgpa" type="number" min="0" max="10" step="0.01" data-bind="academics.cgpa" placeholder="8.45"><div class="hint">Left blank? We'll average your SGPAs.</div></div>
+        <div class="field"><label for="a-10">10th percentage</label><input id="a-10" type="number" min="0" max="100" step="0.01" data-bind="academics.tenth" placeholder="92.4"></div>
+        <div class="field"><label for="a-12">12th / Diploma percentage</label><input id="a-12" type="number" min="0" max="100" step="0.01" data-bind="academics.twelfth" placeholder="88.0"></div>
+        <div class="field"><label for="a-back">Active backlogs</label><input id="a-back" type="number" min="0" step="1" data-bind="academics.backlogs" placeholder="0"></div>
+      </div>
+      <p class="sub-h" style="margin-top:8px">Semester SGPA</p>
+      <div class="sgpa-grid" id="sgpaGrid"></div>
+    </div>
+  </section>
+
+  <!-- ================= MARKS ================= -->
+  <section id="marks">
+    <h2>Subject marks</h2>
+    <p class="lede">Pick a semester, choose the subject from your RSET B.Tech CSE (2023) curriculum, and enter your marks. You can also upload a CSV with columns <code>subject, semester, marks, max</code>.</p>
+    <div class="grid g2">
+      <div class="card">
+        <p class="sub-h">Add a subject</p>
+        <form id="markForm" class="row" autocomplete="off">
+          <div class="field"><label for="m-sem">Semester</label><select id="m-sem"></select></div>
+          <div class="field" style="flex:3;min-width:240px"><label for="m-sub">Subject</label><select id="m-sub" required></select></div>
+          <div class="field" id="m-custom-wrap" style="flex:2;min-width:180px;display:none"><label for="m-custom">Subject name</label><input id="m-custom" placeholder="Type the subject name"></div>
+          <div class="field"><label for="m-marks">Marks</label><input id="m-marks" type="number" min="0" step="0.5" required placeholder="87"></div>
+          <div class="field"><label for="m-max">Out of</label><input id="m-max" type="number" min="1" step="1" value="100" required></div>
+          <div class="field" style="flex:0"><button class="primary" type="submit">Add</button></div>
+        </form>
+        <div class="hint" style="margin:-4px 0 12px">Subjects follow the curriculum, grouped as core, lab, elective and non-credit. A ✓ marks subjects you have already entered; adding one again updates its marks. Choose “Other” for anything not listed.</div>
+        <hr style="border:0;border-top:1px solid var(--grid);margin:8px 0 16px">
+        <p class="sub-h">Bulk upload (CSV)</p>
+        <div class="row">
+          <div class="field"><input type="file" id="csvFile" accept=".csv,text/csv"></div>
+          <div class="field" style="flex:0"><button type="button" id="csvSample">Sample CSV</button></div>
+        </div>
+        <div class="hint">Header row is optional. Max defaults to 100 when omitted.</div>
+      </div>
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:8px">
+          <p class="sub-h" style="margin:0">Your subjects <span id="markCount" class="pill"></span></p>
+          <button class="ghost small" id="clearMarks" type="button">Clear all</button>
+        </div>
+        <div class="scroll"><table class="list" id="markTable"></table></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= CERTIFICATES ================= -->
+  <section id="certificates">
+    <h2>Certificates</h2>
+    <p class="lede">Upload course, cloud, competition and internship certificates (PDF or image).</p>
+    <div class="card" style="margin-bottom:16px">
+      <form id="certForm" autocomplete="off">
+        <div class="grid g3">
+          <div class="field"><label for="c-title">Certificate title</label><input id="c-title" required placeholder="AWS Cloud Practitioner"></div>
+          <div class="field"><label for="c-issuer">Issued by</label><input id="c-issuer" placeholder="Amazon Web Services"></div>
+          <div class="field"><label for="c-cat">Category</label>
+            <select id="c-cat">
+              <option>Technical course</option><option>Cloud</option><option>Programming</option>
+              <option>Competition / Hackathon</option><option>Internship</option><option>Soft skills</option><option>Other</option>
+            </select>
+          </div>
+          <div class="field"><label for="c-date">Issue date</label><input id="c-date" type="date"></div>
+          <div class="field"><label for="c-file">File</label><input id="c-file" type="file" accept=".pdf,image/*"><div class="hint">Files up to ~1 MB are stored for preview; larger files keep the name only.</div></div>
+          <div class="field" style="align-self:end"><button class="primary" type="submit">Upload certificate</button></div>
+        </div>
+      </form>
+    </div>
+    <div id="certList" class="certs"></div>
+  </section>
+
+  <!-- ================= PLACEMENT ================= -->
+  <section id="placement">
+    <h2>Career details</h2>
+    <p class="lede">Skills, experience and links that career services teams and recruiters ask for.</p>
+    <div class="grid g2">
+      <div class="card">
+        <div class="field">
+          <label for="skillInput">Skills</label>
+          <input id="skillInput" placeholder="Type a skill and press Enter (e.g. Python, React, SQL)">
+          <div class="tags" id="skillTags"></div>
+        </div>
+        <div class="grid g3">
+          <div class="field"><label for="pl-int">Internships</label><input id="pl-int" type="number" min="0" data-bind="placement.internships" placeholder="1"></div>
+          <div class="field"><label for="pl-proj">Projects</label><input id="pl-proj" type="number" min="0" data-bind="placement.projects" placeholder="4"></div>
+          <div class="field"><label for="pl-hack">Hackathons</label><input id="pl-hack" type="number" min="0" data-bind="placement.hackathons" placeholder="2"></div>
+        </div>
+        <div class="field"><label for="pl-roles">Preferred roles</label><input id="pl-roles" data-bind="placement.roles" placeholder="SDE, Data Analyst"></div>
+        <div class="field"><label for="pl-loc">Preferred locations</label><input id="pl-loc" data-bind="placement.locations" placeholder="Bengaluru, Hyderabad, Remote"></div>
+      </div>
+      <div class="card">
+        <div class="field"><label for="pl-li">LinkedIn</label><input id="pl-li" type="url" data-bind="placement.linkedin" placeholder="https://linkedin.com/in/..."></div>
+        <div class="field"><label for="pl-gh">GitHub / Portfolio</label><input id="pl-gh" type="url" data-bind="placement.github" placeholder="https://github.com/..."></div>
+        <div class="field"><label for="pl-cp">Coding profile (LeetCode / CodeChef rating)</label><input id="pl-cp" data-bind="placement.coding" placeholder="LeetCode 1750"></div>
+        <div class="field">
+          <label for="resumeFile">Resume (PDF)</label>
+          <input id="resumeFile" type="file" accept=".pdf">
+          <div class="hint" id="resumeInfo">No resume uploaded.</div>
+        </div>
+        <div class="field">
+          <label for="pl-eligible">Career status</label>
+          <select id="pl-eligible" data-bind="placement.status">
+            <option value="">— Select —</option>
+            <option>Looking for opportunities</option>
+            <option>Interviewing</option>
+            <option value="Placed">Hired</option>
+            <option>Opted for higher studies</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DASHBOARD ================= -->
+  <section id="dashboard">
+    <div class="head">
+      <div>
+        <h2>SkillBridge Dashboard</h2>
+        <p class="lede" style="margin:0">Generated live from the data you've entered above.</p>
+      </div>
+      <button class="no-print" onclick="window.print()">Print / Save as PDF</button>
+    </div>
+
+    <div data-subs><div class="pane" data-title="Overview"><div class="card profile-head" id="profileHead"></div>
+
+    <div class="grid g4" id="tiles" style="margin-bottom:16px"></div>
+
+    <div class="grid g2">
+      <div class="card chart-card">
+        <div class="chart-head">
+          <div><h3>SGPA by semester</h3><p>10-point scale · line shows your CGPA</p></div>
+          <button class="ghost small" data-table="t-sgpa">Table</button>
+        </div>
+        <div class="chart" id="c-sgpa"></div>
+        <div class="data-table" id="t-sgpa"></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head">
+          <div><h3>Profile strength</h3><p>The six areas behind your readiness score (%). Weights: academics 20, role-fit skills 25, experience 25, certifications 8, interview readiness 10, resume &amp; links 12</p></div>
+          <button class="ghost small" data-table="t-strength">Table</button>
+        </div>
+        <div class="chart" id="c-strength"></div>
+        <div class="data-table" id="t-strength"></div>
+      </div>
+</div></div><div class="pane" data-title="Subjects and certificates"><div class="grid g2">
+      <div class="card chart-card">
+        <div class="chart-head">
+          <div><h3>Subject scores</h3><p>Marks as % of maximum · <span id="markFilterLbl">all semesters</span></p></div>
+          <div class="row" style="gap:4px;flex-wrap:nowrap">
+            <select id="markFilter" style="width:auto;padding:4px 8px;font-size:12px" aria-label="Filter subjects by semester"></select>
+            <button class="ghost small" data-table="t-marks">Table</button>
+          </div>
+        </div>
+        <div class="chart" id="c-marks"></div>
+        <div class="data-table" id="t-marks"></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head">
+          <div><h3>Certificates by category</h3><p>Count of uploaded certificates</p></div>
+          <button class="ghost small" data-table="t-certs">Table</button>
+        </div>
+        <div class="chart" id="c-certs"></div>
+        <div class="data-table" id="t-certs"></div>
+      </div>
+    </div>
+</div><div class="pane" data-title="Skill gap and feedback">
+    <div class="grid g2" style="margin-top:16px">
+      <div class="card chart-card">
+        <div class="chart-head"><div><h3>Skill gap analysis</h3><p>Your skills against what the target role needs</p></div>
+          <select data-bind="placement.targetRole" style="width:auto" aria-label="Target role"><option value="">Choose target role</option><option>Software Developer</option><option>Data &amp; Analytics</option><option>Cloud &amp; DevOps</option><option>Full-stack Web</option></select></div>
+        <div id="gapBody"></div><div id="roadBox"></div>
+      </div>
+      <div class="card chart-card">
+        <div class="chart-head"><div><h3>Faculty feedback</h3><p>Notes from your mentor</p></div></div>
+        <div id="mentorBox"></div><p class="sub-h" style="margin-top:16px">Action items</p><div id="taskBox"></div>
+      </div>
+    </div></div></div>
+
+  </section>
+<section id="analytics"><h2>Analytics</h2><p class="lede">How your skills compare with employer demand, your own progress over time, and your department.</p>
+<div data-subs><div class="pane" data-title="Skills and progress"><div class="grid g2"><div class="card chart-card"><div class="chart-head"><div><h3>Role skills radar</h3><p>Your level against employer demand for your target role</p></div></div><div id="anRadar"></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Readiness over time</h3><p>Monthly snapshots of your career readiness</p></div></div><div id="anTrend"></div></div></div>
+<div class="card chart-card" style="margin-top:16px"><div class="chart-head"><div><h3>Peer benchmark</h3><p>You against your department average and its top quarter</p></div></div><div id="anBench"></div></div>
+</div><div class="pane" data-title="What-if and projection"><div class="grid g2"><div class="card chart-card"><div class="chart-head"><div><h3>What-if simulator</h3><p>Add experience and see your readiness score change</p></div></div><div id="anSim"></div></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>CGPA projection</h3><p>Where your CGPA is heading, and what you need to reach a target</p></div></div><div id="anProj"></div></div></div></div></div></section>
+<section id="prep"><h2>Interview prep</h2><p class="lede">Log mock interviews, aptitude tests and coding rounds, and watch your scores trend.</p>
+<div class="card" style="margin-bottom:16px"><p class="sub-h">Practice sites</p><div class="grid g3" style="gap:12px"><a class="card" href="https://www.indiabix.com" target="_blank" rel="noopener noreferrer" data-pt="Aptitude test" style="display:block;padding:12px 14px;text-decoration:none;color:inherit"><span class="pill">Aptitude test</span><div style="font-weight:650;margin-top:6px;color:var(--accent)">IndiaBix ↗</div><div class="hint" style="margin:2px 0 0">Free aptitude, reasoning and verbal practice</div></a><a class="card" href="https://prepinsta.com" target="_blank" rel="noopener noreferrer" data-pt="Aptitude test" style="display:block;padding:12px 14px;text-decoration:none;color:inherit"><span class="pill">Aptitude test</span><div style="font-weight:650;margin-top:6px;color:var(--accent)">PrepInsta ↗</div><div class="hint" style="margin:2px 0 0">Company-wise mock tests and mock interviews</div></a><a class="card" href="https://www.placementpreparation.io" target="_blank" rel="noopener noreferrer" data-pt="Aptitude test" style="display:block;padding:12px 14px;text-decoration:none;color:inherit"><span class="pill">Aptitude test</span><div style="font-weight:650;margin-top:6px;color:var(--accent)">PlacementPreparation.io ↗</div><div class="hint" style="margin:2px 0 0">Company-specific aptitude mocks for Indian freshers</div></a><a class="card" href="https://www.hackerrank.com" target="_blank" rel="noopener noreferrer" data-pt="Coding test" style="display:block;padding:12px 14px;text-decoration:none;color:inherit"><span class="pill">Coding test</span><div style="font-weight:650;margin-top:6px;color:var(--accent)">HackerRank ↗</div><div class="hint" style="margin:2px 0 0">Coding assessments like those companies use to hire</div></a><a class="card" href="https://leetcode.com" target="_blank" rel="noopener noreferrer" data-pt="Coding test" style="display:block;padding:12px 14px;text-decoration:none;color:inherit"><span class="pill">Coding test</span><div style="font-weight:650;margin-top:6px;color:var(--accent)">LeetCode ↗</div><div class="hint" style="margin:2px 0 0">Data structures and algorithms practice with contests</div></a><a class="card" href="https://www.geeksforgeeks.org" target="_blank" rel="noopener noreferrer" data-pt="Coding test" style="display:block;padding:12px 14px;text-decoration:none;color:inherit"><span class="pill">Coding test</span><div style="font-weight:650;margin-top:6px;color:var(--accent)">GeeksforGeeks ↗</div><div class="hint" style="margin:2px 0 0">DSA practice and company interview experiences</div></a><a class="card" href="https://grow.google/certificates/interview-warmup/" target="_blank" rel="noopener noreferrer" data-pt="Mock interview" style="display:block;padding:12px 14px;text-decoration:none;color:inherit"><span class="pill">Mock interview</span><div style="font-weight:650;margin-top:6px;color:var(--accent)">Google Interview Warmup ↗</div><div class="hint" style="margin:2px 0 0">Free practice answering interview questions out loud</div></a></div><div class="hint" style="margin-top:10px">Links open in a new tab. Some sites offer paid plans alongside free practice. After a test, log your score below.</div></div>
+<div class="grid g2"><div class="card"><form id="prepForm" class="row" autocomplete="off"><div class="field"><label for="pp-t">Type</label><select id="pp-t"><option>Mock interview</option><option>Aptitude test</option><option>Coding test</option><option>HR round</option></select></div><div class="field"><label for="pp-d">Date</label><input id="pp-d" type="date" required></div><div class="field"><label for="pp-s">Score</label><input id="pp-s" type="number" min="0" step="0.5" required></div><div class="field"><label for="pp-m">Out of</label><input id="pp-m" type="number" min="1" value="100" required></div><div class="field" style="flex:3 1 100%"><label for="pp-n">Feedback / topics to improve</label><input id="pp-n" maxlength="200"></div><div class="field" style="flex:0"><button class="primary" type="submit">Log</button></div></form></div>
+<div class="card chart-card"><div class="chart-head"><div><h3>Score trend</h3><p>Average % by type, first to latest</p></div></div><div id="prepStats"></div></div></div>
+<div class="card" style="margin-top:16px"><div class="scroll" id="prepList"></div></div></section>
+<section id="calendar"><h2>Calendar</h2><p class="lede">Drive deadlines, action-item due dates and mentor meetings in one agenda.</p>
+<div class="grid g2"><div class="card"><p class="sub-h">Request a mentor meeting</p><form id="mtForm" class="row" autocomplete="off"><div class="field"><label for="mt-d">Date</label><input id="mt-d" type="date" required></div><div class="field"><label for="mt-t">Time</label><input id="mt-t" type="time" required></div><div class="field" style="flex:3 1 100%"><label for="mt-n">Topic</label><input id="mt-n" maxlength="120" required></div><div class="field" style="flex:0"><button class="primary" type="submit">Request</button></div></form></div>
+<div class="card"><p class="sub-h">Agenda</p><div id="agenda" class="scroll"></div></div></div></section>
+<section id="drives"><h2>Career opportunities</h2><p class="lede">Drives posted by the career services cell. Eligibility is checked against your live profile.</p><div id="driveList" class="grid g2"></div></section>
+</main>
+</div>
+<div id="app-faculty" hidden></div>
+<div id="app-admin" hidden></div>
+
+<div id="notifPanel" hidden></div>
+<div id="tooltip" role="status" aria-live="polite"></div>
+<div id="toast"></div>
+
+<script>
+/* =========================================================
+   State & persistence (localStorage — nothing leaves the browser)
+   ========================================================= */
+let KEY = 'placeprep.profile.v1';
+const SEMS = 8;
+const blank = () => ({
+  profile: {}, academics: { sgpa: Array(SEMS).fill('') },
+  marks: [], certs: [], placement: { skills: [] }, meta: {}, prep: []
+});
+let state = load();
+
+function normalize(s) {
+  const b = blank(); if (!s) return b;
+  return {
+    profile: { ...b.profile, ...s.profile },
+    academics: { ...b.academics, ...s.academics, sgpa: (s.academics?.sgpa || b.academics.sgpa).concat(Array(SEMS).fill('')).slice(0, SEMS) },
+    marks: s.marks || [], certs: s.certs || [],
+    placement: { ...b.placement, ...s.placement, skills: s.placement?.skills || [] },
+    meta: s.meta || {}, prep: Array.isArray(s.prep) ? s.prep : []
+  };
+}
+function load() {
+  try { return normalize(JSON.parse(localStorage.getItem(KEY))); } catch { return blank(); }
+}
+function save() {
+  try { state.meta = { ...state.meta, updatedAt: new Date().toISOString() }; localStorage.setItem(KEY, JSON.stringify(state)); }
+  catch (e) { toast('Storage is full — try removing large certificate files.'); }
+  try { trackChange(); } catch {}
+}
+
+const $ = s => document.querySelector(s);
+const uid = () => Math.random().toString(36).slice(2, 10);
+const num = v => (v === '' || v == null || isNaN(+v)) ? null : +v;
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+const fmt1 = v => (Math.round(v * 100) / 100).toString();
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+/* =========================================================
+   Generic field binding: data-bind="section.key"
+   ========================================================= */
+function getPath(path) { return path.split('.').reduce((o, k) => o?.[k], state); }
+function setPath(path, val) {
+  const keys = path.split('.'); let o = state;
+  keys.slice(0, -1).forEach(k => o = o[k] ??= {});
+  o[keys.at(-1)] = val;
+}
+function bindFields() {
+  document.querySelectorAll('[data-bind]').forEach(el => {
+    el.value = getPath(el.dataset.bind) ?? '';
+    el.addEventListener('input', () => { setPath(el.dataset.bind, el.value); save(); renderDashboard(); });
+  });
+}
+
+/* SGPA inputs */
+function buildSgpa() {
+  const g = $('#sgpaGrid');
+  g.innerHTML = state.academics.sgpa.map((v, i) => `
+    <div><label for="sg${i}">Sem ${i + 1}</label>
+    <input id="sg${i}" type="number" min="0" max="10" step="0.01" data-bind="academics.sgpa.${i}" placeholder="—"></div>`).join('');
+}
+
+/* =========================================================
+   Marks
+   ========================================================= */
+function semOptions(sel, withAll) {
+  sel.innerHTML = (withAll ? '<option value="">All semesters</option>' : '') +
+    Array.from({ length: SEMS }, (_, i) => `<option value="${i + 1}">Sem ${i + 1}</option>`).join('');
+}
+/* RSET B.Tech CSE 2023-admission curriculum (code, title, group). Sem 7 and 8 electives not titled in the source are entered via "Other". */
+const G_C='Core',G_L='Lab',G_E='Elective',G_N='Non-credit (pass/fail)',G_P='Project and internship';
+const CURR={
+1:[['102906/PH900A','Engineering Physics A'],['102908/MA100B','Calculus And Linear Algebra'],['102906/CO100E','Introduction To Electrical And Electronics Engineering'],['102903/CO100F','Introduction To C Programming'],['102909/CO100I','Induction Programme'],['102908/EN900G','English For Engineers',G_N]],
+2:[['102908/CH900A','Engineering Chemistry'],['102903/MA200B','Complex Analysis And Transforms'],['102903/CE200C','Engineering Mechanics'],['102908/ME900D','Engineering Graphics'],['102902/CO200F','Logic System Design'],['102906/CO922S','Manufacturing Practices A',G_L]],
+3:[['102802/CO300A','Object Oriented Programming Concepts Using Java'],['102903/CO300B','Data Structures'],['102903/MA300C','Discrete Mathematics'],['102902/CO300D','Computer Organization And Architecture'],['102908/EN900E','Communication Skills For Professionals'],['102903/CO322S','Data Structures Lab',G_L],['102908/CO900G','Environmental Science And Sustainable Engineering',G_N]],
+4:[['102902/CO400A','Python For Engineers'],['102903/CO400B','Operating Systems'],['102902/MA400C','Probability Distributions, Numerical Analysis And Statistical Methods'],['102902/CO400D','Theory Of Computation'],['102903/CO900E','Management For Software Engineers'],['102902/CO422S','Operating System Lab',G_L],['102909/ES900G','Constitution Of India',G_N]],
+5:[['102003/CS500A','Computer Networks'],['102003/CS500B','Web Programming'],['102903/CO900C','Database Management Systems'],['102903/CO500D','Algorithm Analysis And Design'],['102808/CO900G','Design Thinking And Creativity'],['102903/CO922S','Database Management Systems Lab',G_L],
+ ['102903/MA501E','Advanced Graph Theory',G_E],['102902/MA501E','Mathematics For Machine Learning',G_E],['102903/CO501E','Software Project Management',G_E],['102902/CO501E','Computer Graphics And Multimedia Techniques',G_E],['102902/MA502E','Mathematics For Quantum Computing',G_E],['102003/CS501E','Business Administration And Technical Communication',G_E]],
+6:[['102003/CS600A','Machine Learning'],['102902/CO600B','Security In Computing'],['102003/CS600C','Language Processors'],['102902/CO600D','AI Concepts'],['102003/CS622S','Language Processors Lab',G_L],['102003/CS622T','Mini Project',G_P],['102908/ES900G','UHV And Social Work With Community Service',G_N],
+ ['102003/CS603E','Soft Computing',G_E],['102903/CO601E','High Performance Computing And Introduction To Quantum Computing',G_E],['102003/CS602E','Design Engineering For Computational Problems',G_E],['102902/MA601E','Fuzzy Sets And Applications',G_E],['102003/CS601E','Software Architecture',G_E],['102902/MA602E','Hypergraphs And Applications',G_E]],
+7:[['','Elective 3',G_E],['','Elective 4',G_E],['','Open Elective 1 (basket)',G_E],['','Practical Elective',G_E],['','Seminar',G_P],['','Project Work Phase 1 / Internship',G_P],['','Rajagiri Elective',G_N]],
+8:[['102003/CS803A','Cloud And IoT Security',G_E],['102003/CS801A','Wireless Sensor Networks',G_E],['102003/CS802A','Medical Image Processing',G_E],['102902/CO801A','Reinforcement Learning',G_E],['102902/CO805A','Cyber Physical Systems',G_E],['102903/CO801A','Edge Computing',G_E],
+ ['102003/CS801B','Distributed Computing',G_E],['102003/CS802B','Cyber Forensics',G_E],['102003/CS803B','IoT And Robotics',G_E],['102003/CS804B','Augmented And Virtual Reality',G_E],['102902/CO801B','Social Network Analysis',G_E],['102903/CO801B','Software Testing',G_E],
+ ['102908/ES902D','Industrial Economics',G_E],['102908/ES903D','Environmental Economics For Engineers',G_E],['102908/ES901D','Engineering Economics',G_E],['102908/EN901D','Engineering Ethics',G_E],['102908/EN903D','Indian Ethics',G_E],['102908/EN902D','Business And Entrepreneurial Ethics',G_E],
+ ['102003/CS822U','Project Work Phase 2 / Internship',G_P],['102909/CO822I','Mandatory Internship',G_P],['','Mandatory MOOC',G_N]]};
+function subjOptions() {
+  const sel = $('#m-sub'), prev = sel.value, sem = +$('#m-sem').value || 1;
+  const have = new Set(state.marks.filter(m => m.sem === sem).map(m => m.subject)), groups = {};
+  (CURR[sem] || []).forEach(([c, t, g = G_C]) => (groups[g] ??= []).push([c, t]));
+  sel.innerHTML = '<option value="">Select a subject…</option>' +
+    Object.entries(groups).map(([g, a]) => `<optgroup label="${g}">` + a.map(([c, t]) =>
+      `<option value="${esc(t)}" data-code="${esc(c)}">${have.has(t) ? '✓ ' : ''}${esc(t)}${c ? ' (' + esc(c.split('/')[1] || c) + ')' : ''}</option>`).join('') + '</optgroup>').join('') +
+    '<option value="__other">Other subject (type the name)…</option>';
+  if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
+  $('#m-custom-wrap').style.display = sel.value === '__other' ? '' : 'none';
+}
+$('#m-sem').addEventListener('change', subjOptions);
+$('#m-sub').addEventListener('change', () => { $('#m-custom-wrap').style.display = $('#m-sub').value === '__other' ? '' : 'none'; if ($('#m-sub').value === '__other') $('#m-custom').focus(); else $('#m-marks').focus(); });
+$('#markForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const sel = $('#m-sub'), other = sel.value === '__other', code = sel.selectedOptions[0]?.dataset.code || '';
+  const m = { id: uid(), subject: (other ? $('#m-custom').value : sel.value).trim(), code: other ? '' : code, sem: +$('#m-sem').value, marks: +$('#m-marks').value, max: +$('#m-max').value || 100 };
+  if (!m.subject) return toast('Choose a subject.');
+  if (m.marks > m.max) return toast('Marks cannot exceed the maximum.');
+  const old = state.marks.find(x => x.sem === m.sem && x.subject === m.subject);
+  if (old) Object.assign(old, { marks: m.marks, max: m.max, code: m.code || old.code }); else state.marks.push(m);
+  save(); renderMarks(); renderDashboard();
+  sel.value = ''; $('#m-custom').value = ''; $('#m-marks').value = ''; subjOptions(); sel.focus();
+  toast(old ? 'Marks updated.' : 'Subject added.');
+});
+function renderMarks() {
+  subjOptions();
+  $('#markCount').textContent = state.marks.length;
+  const t = $('#markTable');
+  if (!state.marks.length) { t.innerHTML = '<tr><td class="empty">No subjects yet.</td></tr>'; return; }
+  const rows = [...state.marks].sort((a, b) => a.sem - b.sem || a.subject.localeCompare(b.subject));
+  t.innerHTML = `<thead><tr><th>Subject</th><th>Sem</th><th class="num">Marks</th><th class="num">%</th><th></th></tr></thead><tbody>` +
+    rows.map(m => `<tr><td>${esc(m.subject)}${m.code ? `<div class="hint" style="margin:0">${esc(m.code)}</div>` : ''}</td><td>${m.sem}</td><td class="num">${m.marks}/${m.max}</td>
+      <td class="num">${fmt1(m.marks / m.max * 100)}</td>
+      <td class="num"><button class="ghost small" data-del-mark="${m.id}" aria-label="Delete ${esc(m.subject)}">✕</button></td></tr>`).join('') + '</tbody>';
+}
+$('#markTable').addEventListener('click', e => {
+  const id = e.target.dataset.delMark; if (!id) return;
+  state.marks = state.marks.filter(m => m.id !== id); save(); renderMarks(); renderDashboard();
+});
+$('#clearMarks').addEventListener('click', () => {
+  if (state.marks.length && confirm('Remove all subjects?')) { state.marks = []; save(); renderMarks(); renderDashboard(); }
+});
+$('#csvFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  const text = await f.text(); let added = 0, skipped = 0;
+  text.split(/\r?\n/).forEach(line => {
+    if (!line.trim()) return;
+    const cells = line.split(',').map(c => c.trim().replace(/^"|"$/g, ''));
+    const [subject, sem, marks, max] = cells;
+    if (isNaN(+marks) || marks === '') { skipped++; return; } // header or bad row
+    const mx = +max || 100;
+    if (!subject || +marks > mx) { skipped++; return; }
+    state.marks.push({ id: uid(), subject, sem: Math.min(SEMS, Math.max(1, +sem || 1)), marks: +marks, max: mx });
+    added++;
+  });
+  save(); renderMarks(); renderDashboard(); e.target.value = '';
+  toast(`Imported ${added} subject${added === 1 ? '' : 's'}${skipped ? ` · ${skipped} row(s) skipped` : ''}`);
+});
+$('#csvSample').addEventListener('click', () => {
+  const csv = 'subject,semester,marks,max\nEngineering Mathematics,1,82,100\nProgramming in C,1,91,100\nData Structures,3,88,100\nDatabase Systems,4,79,100\nOperating Systems,5,85,100\nComputer Networks,5,74,100\n';
+  download('marks-sample.csv', new Blob([csv], { type: 'text/csv' }));
+});
+
+/* =========================================================
+   Certificates
+   ========================================================= */
+const MAX_FILE = 1024 * 1024;
+const readAsDataURL = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(r.result); r.onerror = rej; r.readAsDataURL(f); });
+
+$('#certForm').addEventListener('submit', async e => {
+  e.preventDefault();
+  const f = $('#c-file').files[0];
+  const c = { id: uid(), title: $('#c-title').value.trim(), issuer: $('#c-issuer').value.trim(), category: $('#c-cat').value, date: $('#c-date').value, fileName: f?.name || '', fileData: '' };
+  if (f) {
+    if (f.size <= MAX_FILE) c.fileData = await readAsDataURL(f);
+    else toast('File is over 1 MB — saved the name only.');
+  }
+  state.certs.push(c); save(); renderCerts(); renderDashboard();
+  e.target.reset(); toast('Certificate added');
+});
+function renderCerts() {
+  const l = $('#certList');
+  if (!state.certs.length) { l.innerHTML = '<div class="card empty" style="grid-column:1/-1">No certificates uploaded yet.</div>'; return; }
+  l.innerHTML = state.certs.map(c => `
+    <div class="cert">
+      <span class="pill" style="align-self:start">${esc(c.category)}</span>
+      <div class="t">${esc(c.title)}</div>
+      <div class="m">${esc(c.issuer || '—')}${c.date ? ' · ' + new Date(c.date).toLocaleDateString(undefined, { month: 'short', year: 'numeric' }) : ''}</div>
+      <div class="m">${c.fileName ? '📎 ' + esc(c.fileName) : 'No file attached'}</div>
+      <div class="acts">
+        ${c.fileData ? `<button class="small" data-view-cert="${c.id}">View</button>` : ''}
+        <button class="ghost small" data-del-cert="${c.id}">Remove</button>
+      </div>
+    </div>`).join('');
+}
+$('#certList').addEventListener('click', e => {
+  const v = e.target.dataset.viewCert, d = e.target.dataset.delCert;
+  if (v) openDataUrl(state.certs.find(c => c.id === v).fileData);
+  if (d) { state.certs = state.certs.filter(c => c.id !== d); save(); renderCerts(); renderDashboard(); }
+});
+async function openDataUrl(dataUrl) {
+  const blob = await (await fetch(dataUrl)).blob();
+  window.open(URL.createObjectURL(blob), '_blank');
+}
+
+/* =========================================================
+   Placement: skills + resume
+   ========================================================= */
+$('#skillInput').addEventListener('keydown', e => {
+  if (e.key !== 'Enter' && e.key !== ',') return;
+  e.preventDefault();
+  const v = e.target.value.trim().replace(/,$/, '');
+  if (v && !state.placement.skills.some(s => s.toLowerCase() === v.toLowerCase())) {
+    state.placement.skills.push(v); save(); renderSkills(); renderDashboard();
+  }
+  e.target.value = '';
+});
+function renderSkills() {
+  const P = state.placement;
+  $('#skillTags').innerHTML = P.skills.map((s, i) => `<div class="sk"><b>${esc(s)}</b>
+    <select data-lv="${i}" aria-label="Level for ${esc(s)}">${['Beginner','Intermediate','Advanced'].map(l => `<option${(P.levels?.[s] || 'Beginner') === l ? ' selected' : ''}>${l}</option>`).join('')}</select>
+    <input data-ev="${i}" placeholder="Evidence link (GitHub, LeetCode…)" value="${esc(P.evidence?.[s] || '')}" aria-label="Evidence for ${esc(s)}">
+    <button class="ghost small" data-del-skill="${i}" aria-label="Remove ${esc(s)}">×</button></div>`).join('');
+}
+$('#skillTags').addEventListener('click', e => {
+  const i = e.target.dataset.delSkill; if (i == null) return;
+  state.placement.skills.splice(+i, 1); save(); renderSkills(); renderDashboard();
+});
+$('#resumeFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  state.placement.resumeName = f.name;
+  state.placement.resumeData = f.size <= MAX_FILE ? await readAsDataURL(f) : '';
+  if (!state.placement.resumeData) toast('Resume over 1 MB — saved the name only.');
+  save(); renderResume(); renderDashboard();
+});
+function renderResume() {
+  const p = state.placement, el = $('#resumeInfo');
+  if (!p.resumeName) { el.textContent = 'No resume uploaded.'; return; }
+  el.innerHTML = `📎 ${esc(p.resumeName)} ` + (p.resumeData ? '<a href="#" id="viewResume">View</a> · ' : '') + '<a href="#" id="rmResume">Remove</a>';
+  $('#viewResume')?.addEventListener('click', ev => { ev.preventDefault(); openDataUrl(p.resumeData); });
+  $('#rmResume').addEventListener('click', ev => { ev.preventDefault(); p.resumeName = p.resumeData = ''; p.resumeAnalysis = null; save(); renderResume(); renderDashboard(); });
+}
+
+/* =========================================================
+   Derived metrics
+   ========================================================= */
+function metrics(st = state) {
+  const a = st.academics, p = st.placement;
+  const sg = a.sgpa.map(num);
+  const filled = sg.filter(v => v != null);
+  const avgSg = filled.length ? filled.reduce((x, y) => x + y, 0) / filled.length : null;
+  const cgpa = num(a.cgpa) ?? avgSg;
+  const backlogs = num(a.backlogs) ?? 0;
+  const internships = num(p.internships) ?? 0, projects = num(p.projects) ?? 0, hack = num(p.hackathons) ?? 0;
+  const markPct = st.marks.length ? st.marks.reduce((s, m) => s + m.marks / m.max, 0) / st.marks.length * 100 : null;
+
+  // Readiness model v2: shared scoreReadiness() (see "Readiness model v2" below)
+  const lv = levelsOf(p), skills = new Map([...lv].map(([k, o]) => [k, wt(o)]));
+  const prep = (st.prep || []).filter(x => x.max > 0).sort((x, y) => (x.date || '').localeCompare(y.date || '')).map(x => ({ pct: x.score / x.max * 100 }));
+  const nLinks = [p.linkedin, p.github].filter(Boolean).length;
+  const profile = (p.linkedin ? 20 : 0) + (p.github ? 20 : 0) + (p.resumeName ? (p.resumeAnalysis ? 60 * p.resumeAnalysis.score / 100 : 30) : 0);
+  const profileNote = `${p.resumeName ? (p.resumeAnalysis ? 'Resume ATS ' + p.resumeAnalysis.score + '/100' : 'Resume not analysed yet') : 'No resume'} · ${nLinks} of 2 links`;
+  const R = scoreReadiness({ cgpa, sgpa: sg, markPct, backlogs, certs: st.certs.filter(c => c.category !== 'Competition / Hackathon').length,
+    intern: internships, proj: projects, hack, skills, role: p.targetRole || '', prep, profile, profileNote,
+    expEntered: [p.internships, p.projects, p.hackathons].some(v => num(v) != null) });
+  const strength = R.strength, readiness = R.readiness;
+  return { sg, avgSg, cgpa, cgpaIsAvg: num(a.cgpa) == null && avgSg != null, backlogs, internships, projects, hack, markPct, strength, readiness, confidence: R.confidence, penalty: R.penalty };
+}
+
+/* =========================================================
+   Charts (hand-built SVG, single series → one hue, no legend box)
+   ========================================================= */
+const NS = 'http://www.w3.org/2000/svg';
+const tip = $('#tooltip');
+function showTip(html, x, y) {
+  tip.innerHTML = html; tip.style.opacity = 1;
+  const r = tip.getBoundingClientRect();
+  let left = x + 14, top = y - r.height - 10;
+  if (left + r.width > innerWidth - 8) left = x - r.width - 14;
+  if (top < 8) top = y + 16;
+  tip.style.left = left + 'px'; tip.style.top = top + 'px';
+}
+function hideTip() { tip.style.opacity = 0; }
+function tipAtEl(el, html) { const r = el.getBoundingClientRect(); showTip(html, r.left + r.width / 2, r.top); }
+
+function svgEl(tag, attrs = {}, parent) {
+  const e = document.createElementNS(NS, tag);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function emptyChart(el, msg) { el.innerHTML = `<div class="chart-empty">${msg}</div>`; }
+
+/* Horizontal bar with 4px rounded data-end, square at the baseline */
+function hBarPath(x, y, w, h) {
+  const r = Math.min(4, w, h / 2);
+  if (w <= 0) return '';
+  return `M${x},${y}H${x + w - r}Q${x + w},${y} ${x + w},${y + r}V${y + h - r}Q${x + w},${y + h} ${x + w - r},${y + h}H${x}Z`;
+}
+
+function truncate(text, maxPx, fontPx = 12) {
+  const maxChars = Math.floor(maxPx / (fontPx * 0.56));
+  return text.length > maxChars ? text.slice(0, maxChars - 1) + '…' : text;
+}
+
+/**
+ * Horizontal bar chart.
+ * items: [{label, value, tip}]  opts: {max, unit, labelKeys: Set of indices to direct-label, ticks}
+ */
+function hBarChart(el, items, opts) {
+  el.innerHTML = '';
+  const W = el.clientWidth || 500, rowH = 28, barH = 16;
+  const labelW = Math.min(170, W * 0.36), padR = 44, top = 4, axisH = 22;
+  const plotW = Math.max(60, W - labelW - padR);
+  const H = top + items.length * rowH + axisH;
+  const max = opts.max || Math.max(1, ...items.map(d => d.value));
+  const f = v => opts.unit === '%' ? String(Math.round(v)) : fmt1(v);
+  const x = v => labelW + (v / max) * plotW;
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img', 'aria-label': opts.aria });
+
+  // gridlines + ticks
+  const ticks = opts.ticks || [0, max / 2, max];
+  ticks.forEach(t => {
+    svgEl('line', { x1: x(t), x2: x(t), y1: top, y2: top + items.length * rowH, stroke: 'var(--grid)', 'stroke-width': 1 }, svg);
+    const tx = svgEl('text', { x: x(t), y: H - 6, 'text-anchor': 'middle', class: 'tick' }, svg);
+    tx.textContent = t + (opts.unit || '');
+  });
+  // baseline
+  svgEl('line', { x1: labelW, x2: labelW, y1: top, y2: top + items.length * rowH, stroke: 'var(--axis)', 'stroke-width': 1 }, svg);
+
+  items.forEach((d, i) => {
+    const y = top + i * rowH, by = y + (rowH - barH) / 2;
+    const g = svgEl('g', { class: 'bar-g', tabindex: 0, role: 'listitem', 'aria-label': `${d.label}: ${f(d.value)}${opts.unit || ''}` }, svg);
+    const lt = svgEl('text', { x: labelW - 8, y: y + rowH / 2 + 4, 'text-anchor': 'end', class: 'lbl' }, g);
+    lt.textContent = truncate(d.label, labelW - 12);
+    svgEl('path', { d: hBarPath(labelW, by, Math.max(0, x(d.value) - labelW), barH), fill: 'var(--series-1)', class: 'mark' }, g);
+    if (opts.labelKeys?.has(i)) {
+      const vt = svgEl('text', { x: x(d.value) + 6, y: y + rowH / 2 + 4, class: 'dlabel' }, g);
+      vt.textContent = f(d.value) + (opts.unit || '');
+    }
+    // full-row hit target (≥24px tall)
+    const hit = svgEl('rect', { x: 0, y, width: W, height: rowH, class: 'hit', rx: 4 }, g);
+    const html = `<div class="tt-h">${esc(d.label)}</div><div class="tt-v"><span class="sw"></span>${f(d.value)}${opts.unit || ''}</div>${d.tip ? `<div class="tt-h" style="margin-top:2px">${esc(d.tip)}</div>` : ''}`;
+    g.addEventListener('mousemove', e => showTip(html, e.clientX, e.clientY));
+    g.addEventListener('mouseleave', hideTip);
+    g.addEventListener('focus', () => tipAtEl(hit, html));
+    g.addEventListener('blur', hideTip);
+  });
+  el.appendChild(svg);
+}
+
+/** SGPA line chart with CGPA reference line and crosshair hover. */
+function sgpaChart(el, sg, cgpa) {
+  el.innerHTML = '';
+  const pts = sg.map((v, i) => ({ i, v })).filter(p => p.v != null);
+  if (!pts.length) return emptyChart(el, 'Enter semester SGPAs in Academics<br>to see your trend.');
+  const W = el.clientWidth || 500, H = 250, m = { l: 32, r: 56, t: 14, b: 28 };
+  const pw = W - m.l - m.r, ph = H - m.t - m.b;
+  const x = i => m.l + (SEMS === 1 ? pw / 2 : i / (SEMS - 1) * pw);
+  const y = v => m.t + ph - (v / 10) * ph;
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img', 'aria-label': 'Line chart of SGPA by semester' });
+
+  [0, 2, 4, 6, 8, 10].forEach(t => {
+    svgEl('line', { x1: m.l, x2: m.l + pw, y1: y(t), y2: y(t), stroke: t === 0 ? 'var(--axis)' : 'var(--grid)', 'stroke-width': 1 }, svg);
+    const tx = svgEl('text', { x: m.l - 8, y: y(t) + 4, 'text-anchor': 'end', class: 'tick' }, svg); tx.textContent = t;
+  });
+  for (let i = 0; i < SEMS; i++) {
+    const tx = svgEl('text', { x: x(i), y: H - 8, 'text-anchor': 'middle', class: 'tick' }, svg); tx.textContent = 'S' + (i + 1);
+  }
+  // CGPA reference (dashed = threshold/reference, not a grid)
+  if (cgpa != null) {
+    svgEl('line', { x1: m.l, x2: m.l + pw, y1: y(cgpa), y2: y(cgpa), stroke: 'var(--text-muted)', 'stroke-width': 1, 'stroke-dasharray': '4 4' }, svg);
+    const ct = svgEl('text', { x: m.l + pw + 6, y: y(cgpa) + 4, class: 'lbl' }, svg); ct.textContent = 'CGPA ' + fmt1(cgpa);
+  }
+  // line segments — break at gaps
+  let d = '';
+  pts.forEach((p, k) => { d += (k && pts[k - 1].i === p.i - 1 ? 'L' : 'M') + x(p.i) + ',' + y(p.v); });
+  svgEl('path', { d, fill: 'none', stroke: 'var(--series-1)', 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, svg);
+  pts.forEach(p => svgEl('circle', { cx: x(p.i), cy: y(p.v), r: 4, fill: 'var(--series-1)', stroke: 'var(--surface-1)', 'stroke-width': 2 }, svg));
+
+  // direct labels: latest + best (selective)
+  const last = pts.at(-1), best = pts.reduce((a, b) => b.v > a.v ? b : a);
+  const lab = (p, txt) => { const t = svgEl('text', { x: x(p.i), y: y(p.v) - 10, 'text-anchor': 'middle', class: 'dlabel' }, svg); t.textContent = txt; };
+  lab(last, fmt1(last.v));
+  if (best !== last) lab(best, fmt1(best.v));
+
+  // crosshair layer
+  const cross = svgEl('line', { y1: m.t, y2: m.t + ph, stroke: 'var(--axis)', 'stroke-width': 1, opacity: 0 }, svg);
+  const focusDot = svgEl('circle', { r: 6, fill: 'var(--series-1)', stroke: 'var(--surface-1)', 'stroke-width': 2, opacity: 0 }, svg);
+  const overlay = svgEl('rect', { x: m.l - 12, y: m.t, width: pw + 24, height: ph, fill: 'transparent', tabindex: 0, 'aria-label': 'SGPA chart, use arrow keys to step through semesters' }, svg);
+  let kIdx = pts.length - 1;
+  const show = (p, cx, cy) => {
+    cross.setAttribute('x1', x(p.i)); cross.setAttribute('x2', x(p.i)); cross.setAttribute('opacity', 1);
+    focusDot.setAttribute('cx', x(p.i)); focusDot.setAttribute('cy', y(p.v)); focusDot.setAttribute('opacity', 1);
+    const prev = pts.find(q => q.i === p.i - 1);
+    const delta = prev ? p.v - prev.v : null;
+    showTip(`<div class="tt-h">Semester ${p.i + 1}</div><div class="tt-v"><span class="sw"></span>SGPA ${fmt1(p.v)}</div>` +
+      (delta != null ? `<div class="tt-h">${delta >= 0 ? '▲' : '▼'} ${fmt1(Math.abs(delta))} vs Sem ${p.i}</div>` : ''), cx, cy);
+  };
+  const hide = () => { cross.setAttribute('opacity', 0); focusDot.setAttribute('opacity', 0); hideTip(); };
+  overlay.addEventListener('mousemove', e => {
+    const r = svg.getBoundingClientRect(), mx = (e.clientX - r.left) * (W / r.width);
+    const p = pts.reduce((a, b) => Math.abs(x(b.i) - mx) < Math.abs(x(a.i) - mx) ? b : a);
+    show(p, e.clientX, e.clientY);
+  });
+  overlay.addEventListener('mouseleave', hide);
+  overlay.addEventListener('blur', hide);
+  overlay.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight') kIdx = Math.min(pts.length - 1, kIdx + 1);
+    else if (e.key === 'ArrowLeft') kIdx = Math.max(0, kIdx - 1);
+    else return;
+    e.preventDefault();
+    const r = svg.getBoundingClientRect(), p = pts[kIdx];
+    show(p, r.left + x(p.i) * r.width / W, r.top + y(p.v) * r.height / H);
+  });
+  overlay.addEventListener('focus', () => {
+    const r = svg.getBoundingClientRect(), p = pts[kIdx];
+    show(p, r.left + x(p.i) * r.width / W, r.top + y(p.v) * r.height / H);
+  });
+  el.appendChild(svg);
+}
+
+function dataTable(id, head, rows) {
+  $('#' + id).innerHTML = rows.length
+    ? `<table class="list"><thead><tr>${head.map((h, i) => `<th class="${i ? 'num' : ''}">${h}</th>`).join('')}</tr></thead><tbody>` +
+      rows.map(r => `<tr>${r.map((c, i) => `<td class="${i ? 'num' : ''}">${esc(c)}</td>`).join('')}</tr>`).join('') + '</tbody></table>'
+    : '<div class="empty">No data.</div>';
+}
+
+/* =========================================================
+   Dashboard
+   ========================================================= */
+function renderDashboard() {
+  const M = metrics(), p = state.profile, pl = state.placement;
+
+  // header
+  const initials = (p.name || 'Student').split(/\s+/).map(w => w[0]).slice(0, 2).join('').toUpperCase();
+  $('#profileHead').innerHTML = `
+    <div class="avatar" aria-hidden="true">${esc(initials)}</div>
+    <div style="flex:1">
+      <div class="n">${esc(p.name || 'Your name')}</div>
+      <div class="d">${[p.roll, p.branch, p.batch && 'Batch ' + p.batch].filter(Boolean).map(esc).join(' · ') || 'Fill in your profile above'}</div>
+      <div class="d">${[pl.roles && 'Roles: ' + pl.roles, dispSt(pl.status)].filter(Boolean).map(esc).join(' · ')}</div>
+    </div>
+    ${badgeHero(Math.round(M.readiness))}
+    <div class="tags" style="max-width:32%;justify-content:flex-end;margin:0">${pl.skills.slice(0, 8).map(s => `<span class="tag" style="padding-right:10px">${esc(s)}</span>`).join('')}</div>`;
+
+  const pbx = $('#profileBadge');
+  if (pbx) pbx.innerHTML = badgeHero(Math.round(M.readiness)) + '<p class="hint">Your badge comes from your career readiness: Gold 75+, Silver 60 to 74, Bronze 50 to 59. Add skills, certificates, internships and projects to move up a tier.</p>';
+  // stat tiles
+  const r = Math.round(M.readiness);
+  const statusOf = r >= 75 ? ['Strong', 'var(--good-text)', '✔'] : r >= 50 ? ['On track', 'var(--text-secondary)', '◐'] : ['Needs work', 'var(--critical)', '!'];
+  $('#tiles').innerHTML = `
+    <div class="card tile"><div class="k">CGPA</div>
+      <div class="v">${M.cgpa != null ? fmt1(M.cgpa) : '—'}<small> / 10</small></div>
+      <div class="s">${M.cgpaIsAvg ? 'Average of entered SGPAs' : M.cgpa != null ? 'As entered' : 'Not entered yet'}</div></div>
+    <div class="card tile"><div class="k">School scores</div>
+      <div class="v" style="font-size:22px;margin-top:10px">${num(state.academics.tenth) ?? '—'}% <small>10th</small> · ${num(state.academics.twelfth) ?? '—'}% <small>12th</small></div>
+      <div class="s">${M.backlogs ? `<span class="status" style="color:var(--critical)">! ${M.backlogs} active backlog${M.backlogs > 1 ? 's' : ''}</span>` : '<span class="status" style="color:var(--good-text)">✔ No active backlogs</span>'}</div></div>
+    <div class="card tile"><div class="k">Experience</div>
+      <div class="v">${state.certs.length}<small> certs</small> ${M.internships}<small> internships</small></div>
+      <div class="s">${M.projects} projects · ${M.hack} hackathons</div></div>
+    <div class="card tile"><div class="k">Career readiness</div>
+      <div class="v">${r}<small>%</small></div>
+      <div class="status" style="color:${statusOf[1]}">${statusOf[2]} ${statusOf[0]}</div><div style="margin-top:6px">${badgeChip(r)}</div>
+      <div class="s" title="Share of the score based on data you have entered. Missing areas are counted as a neutral 50, not 0.">Data completeness ${Math.round(M.confidence*100)}%${M.confidence<.6?' · provisional':''}${M.penalty<1?` · backlog penalty −${Math.round((1-M.penalty)*100)}%`:''}</div>
+      <div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${r}" aria-label="Career readiness"><div style="width:${r}%"></div></div></div>`;
+
+  // SGPA chart + table
+  sgpaChart($('#c-sgpa'), M.sg, M.cgpa);
+  dataTable('t-sgpa', ['Semester', 'SGPA'], M.sg.map((v, i) => v != null ? ['Sem ' + (i + 1), fmt1(v)] : null).filter(Boolean));
+
+  // Profile strength — label only the weakest area (selective)
+  const st = M.strength;
+  const weakest = st.reduce((a, b, i) => b.value < st[a].value ? i : a, 0);
+  hBarChart($('#c-strength'), st.map(s => ({ label: s.label, value: s.value, tip: s.note })),
+    { max: 100, unit: '%', ticks: [0, 50, 100], labelKeys: new Set([weakest]), aria: 'Bar chart of profile strength by area' });
+  dataTable('t-strength', ['Area', 'Score %', 'Detail'], st.map(s => [s.label, fmt1(s.value), s.note]));
+
+  // Subject scores (filter by semester)
+  const f = $('#markFilter').value;
+  $('#markFilterLbl').textContent = f ? 'Semester ' + f : 'all semesters';
+  const ms = state.marks.filter(m => !f || m.sem === +f)
+    .map(m => ({ label: m.subject, value: m.marks / m.max * 100, tip: `Sem ${m.sem} · ${m.marks}/${m.max}` }))
+    .sort((a, b) => b.value - a.value);
+  if (!ms.length) emptyChart($('#c-marks'), state.marks.length ? 'No subjects in this semester.' : 'Add subject marks above<br>to compare your scores.');
+  else hBarChart($('#c-marks'), ms, { max: 100, unit: '%', ticks: [0, 25, 50, 75, 100], labelKeys: new Set([0, ms.length - 1]), aria: 'Bar chart of subject scores' });
+  dataTable('t-marks', ['Subject', 'Semester', 'Score %'], ms.map(m => [m.label, m.tip.split(' · ')[0], fmt1(m.value)]));
+
+  // Certificates by category
+  const counts = {};
+  state.certs.forEach(c => counts[c.category] = (counts[c.category] || 0) + 1);
+  const cs = Object.entries(counts).map(([label, value]) => ({ label, value, tip: `${value} certificate${value > 1 ? 's' : ''}` })).sort((a, b) => b.value - a.value);
+  if (!cs.length) emptyChart($('#c-certs'), 'Upload certificates above<br>to see them by category.');
+  else {
+    const mx = Math.max(...cs.map(c => c.value));
+    const ticks = [...new Set([0, Math.ceil(mx / 2), mx])];
+    hBarChart($('#c-certs'), cs, { max: mx, ticks, labelKeys: new Set([0]), aria: 'Bar chart of certificates by category' });
+  }
+  dataTable('t-certs', ['Category', 'Count'], cs.map(c => [c.label, c.value]));
+  renderGap(); renderTasks(); renderDrives(); renderStudentAnalytics(); renderRoad(); renderPrep(); renderAgenda(); renderAts();
+}
+
+/* table toggles */
+document.querySelectorAll('[data-table]').forEach(b => b.addEventListener('click', () => {
+  const t = $('#' + b.dataset.table); t.classList.toggle('open');
+  b.textContent = t.classList.contains('open') ? 'Hide table' : 'Table';
+}));
+$('#markFilter').addEventListener('change', renderDashboard);
+
+/* =========================================================
+   Theme, export / import
+   ========================================================= */
+const THEME_KEY = 'placeprep.theme';
+function applyTheme(t) { if (t) document.documentElement.dataset.theme = t; else delete document.documentElement.dataset.theme; }
+applyTheme(localStorage.getItem(THEME_KEY));
+$('#themeBtn').addEventListener('click', () => {
+  const cur = document.documentElement.dataset.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  const next = cur === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(THEME_KEY, next); applyTheme(next); renderDashboard();
+});
+
+function download(name, blob) {
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+$('#exportBtn').addEventListener('click', () => {
+  const name = (state.profile.name || 'student').replace(/\W+/g, '-').toLowerCase();
+  download(`skillbridge-profile-${name}.json`, new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' }));
+});
+$('#importFile').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try {
+    localStorage.setItem(KEY, JSON.stringify(safeImport(await f.text()))); state = load(); initAll(); toast('Profile imported');
+  } catch { toast('That file could not be read.'); }
+  e.target.value = '';
+});
+
+/* =========================================================
+   Init
+   ========================================================= */
+function initAll() {
+  buildSgpa();
+  document.querySelectorAll('[data-bind]').forEach(el => el.replaceWith(el.cloneNode(true))); // drop old listeners
+  bindFields();
+  renderMarks(); renderCerts(); renderSkills(); renderResume(); renderDashboard();
+}
+
+/* =========================================================
+   Roles: accounts, sample cohort, skill-gap model
+   ========================================================= */
+const CAT=['Data Structures','Python','Java','SQL','Git','System Design','REST APIs','Cloud','Docker','Machine Learning','Communication','Testing','React','Linux','Statistics','Excel'];
+const DEMAND={'Data Structures':85,Python:80,Java:60,SQL:75,Git:70,'System Design':45,'REST APIs':55,Cloud:60,Docker:50,'Machine Learning':45,Communication:80,Testing:50,React:40,Linux:50,Statistics:40,Excel:55};
+const BASE={'Data Structures':.72,Python:.7,Java:.55,SQL:.6,Git:.62,'System Design':.22,'REST APIs':.35,Cloud:.3,Docker:.25,'Machine Learning':.33,Communication:.5,Testing:.3,React:.3,Linux:.4,Statistics:.3,Excel:.45};
+const ROLES={'Software Developer':['Data Structures','Java','Python','SQL','Git','System Design','REST APIs','Testing'],
+ 'Data & Analytics':['SQL','Python','Statistics','Excel','Machine Learning','Communication','Git'],
+ 'Cloud & DevOps':['Linux','Cloud','Docker','Git','Python','Testing','System Design'],
+ 'Full-stack Web':['React','REST APIs','SQL','Git','Testing','Communication']};
+const HOWTO={'Data Structures':'Solve 50 curated problems on arrays, trees and graphs','Python':'Build one automation or data script and publish it on GitHub','Java':'Complete an OOP course and build a small Spring Boot service','SQL':'Practise joins and window functions on a public dataset','Git':'Contribute through pull requests to a team or open-source repo','System Design':'Study a system design primer and run two mock design interviews','REST APIs':'Design and document a CRUD API with authentication','Cloud':'Prepare for AWS Cloud Practitioner or Azure Fundamentals','Docker':'Containerise one of your projects and publish the image','Machine Learning':'Finish an applied ML course with one end-to-end project','Communication':'Join a mock interview or presentation club','Testing':'Add unit tests to an existing project and report coverage','React':'Build and deploy a small front-end with component state','Linux':'Learn shell scripting and manage a small VM','Statistics':'Cover probability and hypothesis testing with a case study','Excel':'Learn pivot tables and lookup formulas on real data'};
+const ALIAS={dsa:'Data Structures',algorithms:'Data Structures',aws:'Cloud',azure:'Cloud',gcp:'Cloud',ml:'Machine Learning',rest:'REST APIs','rest api':'REST APIs',api:'REST APIs',pytest:'Testing',junit:'Testing','unit testing':'Testing',stats:'Statistics'};
+const DEPTS={CSE:'Computer Science & Engg.',IT:'Information Technology',ECE:'Electronics & Comm.',EEE:'Electrical & Electronics',ME:'Mechanical Engg.'};
+const ROLE_LABEL={student:'Student',faculty:'Faculty',admin:'Administrator'};
+const dispSt=s=>s==='Placed'?'Hired':s;
+const ST={Placed:'ok',Interviewing:'','Looking':'warn','Higher studies':''};
+const SEED={profile:{name:'Ananya Sharma',roll:'21CS1043',branch:'Computer Science & Engg.',batch:'2026',email:'ananya.s@college.edu',phone:'+91 98470 12345'},
+ academics:{cgpa:'',tenth:'94.2',twelfth:'91.5',backlogs:'0',sgpa:['8.1','8.4','8.6','8.3','8.9','9.0','','']},
+ marks:[['Engineering Mathematics',1,82],['Programming in C',1,91],['Data Structures',3,88],['Database Systems',4,79],['Operating Systems',5,85],['Computer Networks',5,74]].map(([subject,sem,marks],i)=>({id:'m'+i,subject,sem,marks,max:100})),
+ certs:[['AWS Cloud Practitioner','Amazon Web Services','Cloud','2025-03-10'],['Python for Everybody','Coursera','Programming','2024-08-21'],['Smart India Hackathon, Finalist','Govt. of India','Competition / Hackathon','2025-01-15']].map(([title,issuer,category,date],i)=>({id:'c'+i,title,issuer,category,date,fileName:'',fileData:''})),
+ placement:{skills:['Python','Java','SQL','Git','DSA','React'],internships:'1',projects:'4',hackathons:'2',roles:'SDE, Data Analyst',locations:'Bengaluru, Kochi, Remote',status:'Looking for opportunities',targetRole:'Software Developer',linkedin:'https://linkedin.com/in/ananya-sharma',github:'https://github.com/ananya-sharma'}};
+const USERS=[
+ {u:'ananya.s',p:'Student@2026',role:'student',name:'Ananya Sharma',id:'S-ananya',seed:SEED},
+ {u:'rahul.m',p:'Student@2026',role:'student',name:'Rahul Menon',id:'S-rahul',dept:'CSE'},
+ {u:'prof.nair',p:'Faculty@2026',role:'faculty',name:'Prof. Anil Nair',id:'F-nair',dept:'CSE'},
+ {u:'prof.thomas',p:'Faculty@2026',role:'faculty',name:'Prof. Mary Thomas',id:'F-thomas',dept:'IT'},
+ {u:'admin',p:'Admin@2026',role:'admin',name:'Dr. Meera Iyer',id:'A-iyer'}];
+
+const rng=a=>()=>{a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296};
+const R=rng(2026),pick=a=>a[Math.floor(R()*a.length)];
+const FN=['Arjun','Meera','Rahul','Sneha','Vishnu','Fatima','Kiran','Divya','Aditya','Neha','Joseph','Anjali','Mohammed','Lakshmi','Rohan','Priya','Sanjay','Nithya','Alan','Hari','Sana','Gokul','Reshma','Tara'];
+const LN=['Sharma','Menon','Nair','Iyer','Thomas','Pillai','Varghese','Kumar','Reddy','Das','Joseph','Krishnan','Khan','Mathew','George','Patel'];
+/* ---------- Readiness model v2 ----------
+   One scoring function shared by the student dashboard (metrics) and the faculty cohort (readiness).
+   1. Six components, each 0-100, built from diminishing-returns curves (no hard caps).
+   2. Skills are scored as demand-weighted fit to the target role, using level and evidence.
+   3. Interview/mock-test performance is included.
+   4. Missing data is imputed at a neutral prior (not 0) and reported as lower confidence.
+   5. Final = 70% weighted average + 30% weighted geometric mean, so lopsided profiles are not rescued by one strong area.
+   6. Backlog penalty grows with the number of backlogs. */
+const RD_W={acad:.20,skill:.25,exp:.25,cert:.08,prep:.10,prof:.12},RD_PRIOR=50,RD_BL=n=>n>0?1-Math.min(.30,.05+.05*n):1;
+const RD_LABEL={acad:'Academics',skill:'Role-fit skills',exp:'Internships & projects',cert:'Certifications',prep:'Interview readiness',prof:'Resume & links'};
+const rdSat=(x,t)=>100*(1-Math.exp(-Math.max(0,x)/t)),rdClamp=(x,a=0,b=100)=>Math.min(b,Math.max(a,x));
+function scoreReadiness(i){
+  const C={},f1=v=>(Math.round(v*10)/10).toString();
+  // Academics: CGPA 4 to 9 maps to 0-100; subject marks 40% to 85% maps to 0-100; SGPA trend adds up to +/-5
+  const cg=i.cgpa!=null?rdClamp((i.cgpa-3.5)/5.5*100):null,mk=i.markPct!=null?rdClamp((i.markPct-40)/45*100):null;
+  let ac=cg!=null&&mk!=null?.7*cg+.3*mk:(cg??mk),tr=0;
+  const sg=(i.sgpa||[]).filter(v=>v!=null);
+  if(ac!=null&&sg.length>=3){const n=sg.length,mx=(n-1)/2,my=sg.reduce((a,b)=>a+b,0)/n;let nu=0,de=0;sg.forEach((y,x)=>{nu+=(x-mx)*(y-my);de+=(x-mx)**2});tr=rdClamp(nu/de*10,-5,5);ac=rdClamp(ac+tr)}
+  C.acad={v:ac??0,known:ac!=null,entered:ac!=null,note:ac==null?'Add CGPA or subject marks':`CGPA ${i.cgpa!=null?f1(i.cgpa):'—'}${i.markPct!=null?' · marks '+Math.round(i.markPct)+'%':''}${tr?` · trend ${tr>0?'+':''}${f1(tr)}`:''}`};
+  // Skills: demand-weighted fit (concave, so partial coverage still earns credit) to the target role (or the 8 most in-demand skills), plus off-role breadth
+  const need=i.role&&ROLES[i.role]?ROLES[i.role]:CAT.slice().sort((a,b)=>DEMAND[b]-DEMAND[a]).slice(0,8),sw=k=>Math.min(1,(i.skills.get(k)||0)/.9);
+  const wsum=ks=>ks.reduce((a,k)=>a+DEMAND[k],0),wfit=ks=>ks.reduce((a,k)=>a+DEMAND[k]*sw(k),0)/wsum(ks)*100;
+  const extra=CAT.filter(k=>!need.includes(k)),fit=wfit(need),br=rdClamp(wfit(extra)/40*100);
+  C.skill={v:100*Math.pow((.85*fit+.15*br)/100,.7),known:true,entered:i.skills.size>0,note:`${Math.round(fit)}% fit to ${i.role||'top in-demand skills'} · ${[...i.skills.keys()].length} skills`};
+  // Experience: saturating curves; internships and projects each carry half
+  const ip=rdSat(i.intern,1),pj=rdSat(i.proj+.7*i.hack,2.5);
+  C.exp={v:.5*ip+.5*pj,known:true,entered:i.expEntered??true,note:`${i.intern} internship${i.intern===1?'':'s'} · ${i.proj} project${i.proj===1?'':'s'} · ${i.hack} hackathon${i.hack===1?'':'s'}`};
+  C.cert={v:rdSat(i.certs,2.5),known:true,entered:i.certs>0,note:`${i.certs} certificate${i.certs===1?'':'s'} (hackathon certificates counted under projects)`};
+  // Interview readiness: recency-weighted mean of the last 5 logged sessions
+  const pp=(i.prep||[]).slice(-5),pw=pp.reduce((a,_,k)=>a+k+1,0),pv=pp.length?pp.reduce((a,p,k)=>a+p.pct*(k+1),0)/pw:0;
+  C.prep={v:pv,known:pp.length>0,entered:pp.length>0,note:pp.length?`${pp.length} recent session${pp.length===1?'':'s'} · weighted avg ${Math.round(pv)}%`:'Log a mock test or interview'};
+  C.prof={v:i.profile??0,known:i.profile!=null,entered:(i.profile||0)>0,note:i.profileNote||''};
+  // Combine
+  let ar=0,lg=0,conf=0;
+  Object.keys(RD_W).forEach(k=>{const w=RD_W[k],v=C[k].known?C[k].v:RD_PRIOR;ar+=w*v;lg+=w*Math.log(Math.max(v,10));if(C[k].entered)conf+=w});
+  const raw=.75*ar+.25*Math.exp(lg),mult=RD_BL(i.backlogs||0);
+  return{readiness:raw*mult,raw,penalty:mult,confidence:conf,
+    strength:Object.keys(RD_W).map(k=>({key:k,label:RD_LABEL[k],value:C[k].v,known:C[k].known,weight:RD_W[k],note:C[k].note}))}}
+/* Cohort rows only hold counts and skill names, so every skill is treated as Intermediate */
+function readiness(s){return scoreReadiness({cgpa:s.cgpa||null,markPct:s.mk??null,sgpa:[],backlogs:s.backlogs,certs:s.certs,intern:s.intern,proj:s.proj,hack:s.hack,skills:new Map(s.skills.map(k=>[k,.7])),role:'',prep:[],profile:s.links}).readiness}
+const COHORT=[];
+Object.keys(DEPTS).forEach(d=>{for(let i=0;i<48;i++){
+ const a=(R()+R()+R())/3,sw=d==='CSE'||d==='IT'?1:.55;
+ const s={id:d+i,dept:d,name:pick(FN)+' '+pick(LN),roll:`22${d}${String(i+1).padStart(3,'0')}`,cgpa:Math.min(9.8,+(5.6+a*4.2).toFixed(2)),backlogs:a<.38&&R()<.6?1+Math.floor(R()*3):0,
+  skills:CAT.filter(k=>R()<BASE[k]*sw*(.5+a)),certs:Math.floor(a*R()*8),intern:R()<a*.95?(R()<.3?2:1):0,proj:Math.floor(R()*3+a*3),hack:Math.floor(R()*a*3.5),links:R()<.4+a/2?100:67};
+ s.mk=Math.min(100,Math.max(0,s.cgpa*10+(R()-.5)*12));s.r=Math.round(readiness(s));const x=R();
+ s.status=s.r>=68&&x<.78?'Placed':s.r>=45&&x<.55?'Interviewing':x>.93?'Higher studies':'Looking';
+ s.pkg=s.status==='Placed'?+(3.4+s.r/100*11+R()*3.5).toFixed(1):0;COHORT.push(s)}});
+COHORT[0]={id:'S-ananya',dept:'CSE',name:'Ananya Sharma',roll:'21CS1043',cgpa:8.55,backlogs:0,skills:['Data Structures','Python','Java','SQL','Git','React'],certs:3,intern:1,proj:4,hack:2,links:100,status:'Looking',pkg:0};
+COHORT[0].r=Math.round(readiness(COHORT[0]));
+
+const avg=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:0;
+const LS=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch{return d}};
+const LSset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch{}};
+const SS={get:()=>{try{return sessionStorage.getItem('pp.session')}catch{return null}},set:v=>{try{v?sessionStorage.setItem('pp.session',v):sessionStorage.removeItem('pp.session')}catch{}}};
+const hb=rows=>rows.map(r=>`<div class="hb"><span>${esc(r.l)}</span><div class="tr"><i style="width:${r.v}%;${r.c?'background:'+r.c:''}"></i>${r.m!=null?`<u style="left:${r.m}%" title="Employer demand ${r.m}%"></u>`:''}</div><b>${Math.round(r.v)}%</b></div>`).join('');
+const supply=(L,k)=>L.filter(s=>s.skills.includes(k)).length/L.length*100;
+const tile=(k,v,s,x='')=>`<div class="card tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div>${x}</div>`;
+const meter=v=>`<div class="meter"><div style="width:${v}%"></div></div>`;
+const shell=(sub,nav,acts)=>`<header><div class="bar"><div class="brand">SkillBridge <span>${sub}</span></div><nav>${nav.map(([h,t])=>`<a href="#${h}">${t}</a>`).join('')}</nav><div class="actions">${acts||''}<button class="ghost" data-bell aria-label="Notifications">🔔<sup data-badge style="color:var(--critical);font-weight:700"></sup></button><span class="who">${esc(ME.name)}</span><button class="small" data-logout>Sign out</button><button class="ghost" data-toggle-theme aria-label="Toggle dark mode">◐</button></div></div></header>`;
+function exportCSV(L,name){const h=['Name','Roll','Department','CGPA','Backlogs','Skills covered','Certificates','Internships','Readiness %','Status'];
+ download(name,new Blob([[h,...L.map(s=>[s.name,s.roll,s.dept,s.cgpa,s.backlogs,s.skills.length,s.certs,s.intern,s.r,dispSt(s.status)])].map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n')],{type:'text/csv'}))}
+
+/* ---------- Live student records (the bridge between student and faculty/admin) ---------- */
+const PROFILE_PREFIX='placeprep.profile.v1.';
+const allUsers=()=>USERS.concat(LS('pp.users',[]));
+const STATUS_MAP={'Looking for opportunities':'Looking',Interviewing:'Interviewing',Placed:'Placed','Opted for higher studies':'Higher studies'};
+const ago=iso=>{const m=Math.round((Date.now()-new Date(iso))/60000);return m<1?'just now':m<60?m+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' d ago'};
+function deptOf(b){b=(b||'').trim().toLowerCase();if(!b)return null;
+ const k=Object.keys(DEPTS).find(k=>DEPTS[k].toLowerCase()===b);if(k)return k;
+ if(/inform|\bit\b/.test(b))return'IT';if(/comput|\bcse?\b/.test(b))return'CSE';if(/electrical|\beee\b/.test(b))return'EEE';
+ if(/electronic|\bece\b/.test(b))return'ECE';if(/mech/.test(b))return'ME';return null}
+function loadStudent(u){let raw=null;try{raw=JSON.parse(localStorage.getItem(PROFILE_PREFIX+u.u))}catch{}return normalize(raw||u.seed||null)}
+function liveRecord(u){
+ const d=loadStudent(u),M=metrics(d),p=d.profile,pl=d.placement;
+ const started=M.cgpa!=null||d.marks.length>0||d.certs.length>0||pl.skills.length>0||!!(num(pl.internships)||num(pl.projects));
+ return{id:u.id,user:u.u,live:true,started,data:d,updatedAt:d.meta?.updatedAt||null,
+  dept:deptOf(p.branch)||u.dept||'CSE',name:p.name||u.name,roll:p.roll||u.roll||'—',
+  cgpa:M.cgpa!=null?+M.cgpa.toFixed(2):0,backlogs:M.backlogs,skills:[...keysOf(pl.skills)],certs:d.certs.length,
+  intern:M.internships,proj:M.projects,hack:M.hack,links:M.strength.find(c=>c.key==='prof').value,mk:M.markPct,status:STATUS_MAP[pl.status]||'Looking',pkg:0,r:Math.round(M.readiness)}}
+/* sample cohort (minus the hardcoded Ananya row) + every real student account, read fresh from storage */
+const cohortAll=()=>COHORT.filter(s=>s.id!=='S-ananya').concat(allUsers().filter(u=>u.role==='student').map(liveRecord));
+function studentDetail(s){
+ const d=s.data,p=d.profile,pl=d.placement,a=d.academics;
+ const row=(k,v)=>v?`<tr><td class="hint" style="width:36%">${k}</td><td>${v}</td></tr>`:'';
+ const link=u=>u?(/^https?:\/\//i.test(u)?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u.replace(/^https?:\/\//i,''))}</a>`:esc(u)):'';
+ const sg=a.sgpa.map((v,i)=>v!==''&&v!=null?`S${i+1} ${v}`:'').filter(Boolean).join(' · ');
+ return `<p class="sub-h">Submitted by the student <span class="hint">${s.updatedAt?'· updated '+ago(s.updatedAt):''}</span></p>
+ <table class="list"><tbody>${row('Email',esc(p.email))}${row('Phone',esc(p.phone))}${row('10th / 12th',(a.tenth||a.twelfth)?esc((a.tenth||'—')+'% / '+(a.twelfth||'—')+'%'):'')}${row('SGPA',esc(sg))}
+ ${row('Intern / projects / hackathons',`${s.intern} / ${s.proj} / ${s.hack}`)}${row('Subjects entered',d.marks.length||'')}${row('Resume ATS score',pl.resumeAnalysis?pl.resumeAnalysis.score+' / 100':'')}${row('Interview prep',d.prep?.length?`${d.prep.length} sessions · avg ${Math.round(avg(d.prep.map(p=>p.score/p.max*100)))}%`:'')}${row('Target role',esc(pl.targetRole))}${row('Preferred roles',esc(pl.roles))}${row('Locations',esc(pl.locations))}
+ ${row('Coding profile',esc(pl.coding))}${row('LinkedIn',link(pl.linkedin))}${row('GitHub',link(pl.github))}${row('Skill levels',esc([...levelsOf(pl)].map(([k,v])=>k+': '+v.lv+(v.ev?' ✔ evidence':'')).join(' · ')))}${row('All skills listed',esc(pl.skills.join(', ')))}
+ ${row('Resume',pl.resumeName?esc(pl.resumeName)+(pl.resumeData?` <button class="small" data-fres="${s.id}">View</button>`:''):'')}</tbody></table>
+ <p class="sub-h">Certificates (${d.certs.length})</p>${d.certs.map(c=>`<div class="note">${esc(c.title)} ${c.fileData?`<button class="ghost small" data-fcert="${s.id}|${c.id}">View file</button>`:''}<small>${esc(c.category)} · ${esc(c.issuer||'—')}</small></div>`).join('')||'<div class="hint">None uploaded.</div>'}`}
+
+/* ================= Feedback loop, notifications, levels, trends, drives, mentors ================= */
+const LV=['Beginner','Intermediate','Advanced'],LVW={Beginner:.4,Intermediate:.7,Advanced:1},TS=['To do','In progress','Done'],AS=['Applied','Shortlisted','Selected','Rejected'];
+const mlab=m=>new Date(m+'-01').toLocaleString(undefined,{month:'short'});
+const mentorOf=s=>{const a=LS('pp.assign',{})[s.id],U=allUsers();return(a&&U.some(u=>u.id===a)?a:null)||U.find(u=>u.role==='faculty'&&u.dept===s.dept)?.id};
+const cust=n=>LS('pp.users',[]).some(x=>x.u===n);
+const myDept=()=>deptOf(state.profile.branch)||ME?.dept;
+function notify(to,text){if(!to)return;const a=LS('pp.notif',{});(a[to]??=[]).unshift({id:uid(),t:text,d:new Date().toISOString(),read:false});a[to]=a[to].slice(0,40);LSset('pp.notif',a)}
+function updateBadge(){const n=(LS('pp.notif',{})[ME?.id]||[]).filter(x=>!x.read).length;document.querySelectorAll('[data-badge]').forEach(e=>e.textContent=n||'')}
+function levelsOf(pl){const m=new Map();(pl.skills||[]).forEach(s=>{const k=ALIAS[s.toLowerCase()]||CAT.find(c=>c.toLowerCase()===s.toLowerCase());if(!k)return;const lv=pl.levels?.[s]||'Beginner',ev=pl.evidence?.[s]||'',o=m.get(k);if(!o||LV.indexOf(lv)>LV.indexOf(o.lv))m.set(k,{lv,ev:ev||o?.ev||''})});return m}
+const wt=o=>o.lv==='Advanced'&&!o.ev?0.85:LVW[o.lv];
+const elig=(s,d)=>[s.cgpa<d.minCgpa&&`CGPA ${s.cgpa||'—'} is below ${d.minCgpa}`,d.noBack&&s.backlogs>0&&'has active backlogs',...d.skills.filter(k=>!s.skills.includes(k)).map(k=>'missing '+k)].filter(Boolean);
+$('#skillTags').addEventListener('change',e=>{const i=e.target.dataset.lv;if(i==null)return;(state.placement.levels??={})[state.placement.skills[+i]]=e.target.value;save();renderDashboard()});
+$('#skillTags').addEventListener('input',e=>{const i=e.target.dataset.ev;if(i==null)return;(state.placement.evidence??={})[state.placement.skills[+i]]=e.target.value.trim();save();renderGap()});
+
+/* change tracking: snapshots + alerts to the mentor */
+function trackChange(){if(ME?.role!=='student')return;const M=metrics(),r=Math.round(M.readiness),id=ME.id,tr=LS('pp.track',{}),p=tr[id],now=Date.now(),mo=new Date().toISOString().slice(0,7),to=mentorOf({id,dept:myDept()});
+ if(p){if(M.backlogs>p.b)notify(to,`${ME.name} reported ${M.backlogs} active backlog${M.backlogs>1?'s':''}.`);
+  if(r<=p.r-5){notify(to,`${ME.name}'s readiness dropped from ${p.r}% to ${r}%.`);p.r=r}else if(r>p.r)p.r=r;
+  if(now-p.t>1800000){notify(to,`${ME.name} updated their profile.`);p.t=now}p.b=M.backlogs}else tr[id]={r,b:M.backlogs,t:now};
+ LSset('pp.track',tr);const h=LS('pp.hist',{}),a=h[id]??=[],l=a.at(-1);if(l?.m===mo){l.r=r;l.c=M.cgpa}else a.push({m:mo,r,c:M.cgpa});LSset('pp.hist',h)}
+function snapshotAll(){const h=LS('pp.hist',{}),mo=new Date().toISOString().slice(0,7);let ch=0;
+ if(!h['S-ananya']){h['S-ananya']=[{m:'2026-08',r:58,c:8.4},{m:'2026-09',r:64,c:8.5},{m:'2026-10',r:70,c:8.55}];ch=1} /* demo history */
+ COHORT.forEach(c=>{if(c.id==='S-ananya'||h[c.id])return;const k=[...c.id].reduce((a,ch)=>a+ch.charCodeAt(0),0);h[c.id]=[2,1,0].map(i=>{const d=new Date();d.setDate(1);d.setMonth(d.getMonth()-i);return{m:d.toISOString().slice(0,7),r:Math.max(0,Math.min(100,c.r-i*((k+i*7)%9-3))),c:c.cgpa}});ch=1});
+ allUsers().filter(u=>u.role==='student').forEach(u=>{const s=liveRecord(u);if(!s.started)return;const a=h[u.id]??=[],l=a.at(-1);if(l?.m===mo){if(l.r!==s.r){l.r=s.r;l.c=s.cgpa;ch=1}}else{a.push({m:mo,r:s.r,c:s.cgpa});ch=1}});if(ch)LSset('pp.hist',h)}
+function trendAll(){const h=LS('pp.hist',{}),ms=[...new Set(Object.values(h).flat().map(x=>x.m))].sort();
+ return ms.map(m=>{const v=Object.values(h).map(a=>a.filter(x=>x.m<=m).at(-1)).filter(Boolean).map(x=>x.r);return{l:mlab(m),v:Math.round(avg(v))}})}
+
+/* student: action items + drives */
+function renderTasks(){const el=$('#taskBox');if(!el||ME?.role!=='student')return;const T=LS('pp.tasks',{})[ME.id]||[],today=new Date().toISOString().slice(0,10);
+ el.innerHTML=T.length?T.map(k=>{const od=k.due&&k.status!=='Done'&&k.due<today;return `<div class="note"><b>${esc(k.t)}</b><small style="${od?'color:var(--critical)':''}">${k.due?'Due '+esc(k.due)+(od?' · overdue':''):'No due date'} · from ${esc(k.by)}</small><select data-task-st="${k.id}" aria-label="Status" style="width:auto;margin-top:4px;padding:3px 6px;font-size:12px">${TS.map(s=>`<option${s===k.status?' selected':''}>${s}</option>`).join('')}</select></div>`}).join(''):'<div class="empty">No action items yet.</div>'}
+function renderDrives(){const el=$('#driveList');if(!el||ME?.role!=='student')return;const D=LS('pp.drives',[]),A=LS('pp.apps',{}),me=liveRecord(ME);
+ el.innerHTML=D.length?D.map(d=>{const why=elig(me,d),ap=(A[d.id]||[]).find(a=>a.sid===ME.id);return `<div class="card"><div class="row" style="justify-content:space-between;align-items:center"><b>${esc(d.company)} · ${esc(d.role)}</b><span class="pill">${esc(d.pkg)} LPA</span></div><div class="hint">Min CGPA ${d.minCgpa}${d.noBack?' · no active backlogs':''} · Skills: ${esc(d.skills.join(', ')||'any')} · Apply by ${esc(d.deadline||'—')}</div>${why.length?`<div class="hint" style="color:var(--critical)">Not eligible: ${why.map(esc).join('; ')}</div>`:'<div class="hint" style="color:var(--good-text)">✔ You are eligible</div>'}<div style="margin-top:8px">${ap?`<span class="pill ok">${esc(ap.status)}</span>`:`<button class="primary small" data-apply="${d.id}"${why.length?' disabled':''}>Apply</button>`}</div></div>`}).join(''):'<div class="card empty" style="grid-column:1/-1">No drives posted yet.</div>'}
+
+/* faculty drawer blocks */
+function taskBlock(id){const T=LS('pp.tasks',{})[id]||[];return `<p class="sub-h">Action items</p>${T.map(k=>`<div class="note">${esc(k.t)}<small>${k.due?'Due '+esc(k.due)+' · ':''}<b>${esc(k.status)}</b> <button class="ghost small" data-deltask="${id}|${k.id}">Remove</button></small></div>`).join('')}<div class="row"><div class="field" style="flex:3"><input id="tkTxt" placeholder="e.g. Complete 50 DSA problems" aria-label="Action item"></div><div class="field"><input id="tkDue" type="date" aria-label="Due date"></div><div class="field" style="flex:0"><button class="small" data-addtask="${id}">Assign</button></div></div>`}
+function trendBlock(id){const a=LS('pp.hist',{})[id]||[];if(!a.length)return'';if(a.length<2)return '<p class="sub-h">Readiness trend</p><div class="hint">One monthly snapshot so far; the trend appears next month.</div>';
+ const W=380,H=90,x=i=>14+i*(W-28)/(a.length-1),y=v=>H-16-v/100*(H-34);
+ return `<p class="sub-h">Readiness trend</p><svg viewBox="0 0 ${W} ${H}" style="width:100%" role="img" aria-label="Readiness by month"><path d="${a.map((p,i)=>(i?'L':'M')+x(i)+','+y(p.r)).join('')}" fill="none" stroke="var(--accent)" stroke-width="2"/>${a.map((p,i)=>`<circle cx="${x(i)}" cy="${y(p.r)}" r="3" fill="var(--accent)"/><text x="${x(i)}" y="${y(p.r)-7}" text-anchor="middle" font-size="10" fill="var(--text-secondary)">${p.r}</text><text x="${x(i)}" y="${H-3}" text-anchor="middle" font-size="9" fill="var(--text-muted)">${mlab(p.m)}</text>`).join('')}</svg>`}
+function appsBlock(id){const A=LS('pp.apps',{}),m=LS('pp.drives',[]).map(d=>[d,(A[d.id]||[]).find(a=>a.sid===id)]).filter(x=>x[1]);return m.length?'<p class="sub-h">Drive applications</p>'+m.map(([d,a])=>`<div class="note">${esc(d.company)} · ${esc(d.role)}<small>${esc(a.status)}</small></div>`).join(''):''}
+
+/* admin: drives + mentor assignment */
+function renderDrivesAdmin(){const D=LS('pp.drives',[]),A=LS('pp.apps',{}),all=cohortAll();
+ $('#driveAdmin').innerHTML=`<div class="card" style="margin-bottom:16px"><p class="sub-h">Post a drive</p><div class="grid g4"><div class="field"><label for="dCo">Company</label><input id="dCo"></div><div class="field"><label for="dRole">Role</label><input id="dRole"></div><div class="field"><label for="dPkg">Package (LPA)</label><input id="dPkg" type="number" step="0.1"></div><div class="field"><label for="dMin">Minimum CGPA</label><input id="dMin" type="number" step="0.1" value="7"></div></div>
+ <div class="grid g4"><div class="field" style="grid-column:span 2"><label for="dSk">Required skills (comma separated)</label><input id="dSk" placeholder="Python, SQL, Data Structures"></div><div class="field"><label for="dDl">Apply by</label><input id="dDl" type="date"></div><div class="field" style="align-self:end"><label style="display:flex;gap:6px;align-items:center"><input id="dNb" type="checkbox" style="width:auto" checked>No active backlogs</label><button class="primary" data-postdrive>Post drive</button></div></div></div>`+
+ (D.map(d=>{const E=all.filter(s=>!elig(s,d).length),ap=A[d.id]||[];return `<div class="card" style="margin-bottom:12px"><div class="row" style="justify-content:space-between;align-items:center"><b>${esc(d.company)} · ${esc(d.role)} · ${esc(d.pkg)} LPA</b><button class="ghost small" data-deldrive="${d.id}">Remove</button></div><div class="hint">Min CGPA ${d.minCgpa}${d.noBack?' · no active backlogs':''} · Skills: ${esc(d.skills.join(', ')||'any')} · Apply by ${esc(d.deadline||'—')}</div>
+ <details><summary>${E.length} eligible students · ${ap.length} applied</summary><div class="chips">${E.slice(0,60).map(s=>`<span class="chip${ap.some(a=>a.sid===s.id)?' ok':''}">${esc(s.name)}</span>`).join('')}</div>${E.length>60?'<div class="hint">Showing 60 of '+E.length+'.</div>':''}</details>
+ ${ap.length?`<table class="list"><thead><tr><th>Applicant</th><th>Status</th><th>Profile</th></tr></thead><tbody>${ap.map(a=>`<tr><td>${esc(all.find(x=>x.id===a.sid)?.name||a.sid)}</td><td><select data-appst="${d.id}|${a.sid}" style="width:auto">${AS.map(s=>`<option${s===a.status?' selected':''}>${s}</option>`).join('')}</select></td><td><button class="small" data-viewapp="${d.id}|${a.sid}" aria-label="View profile of ${esc(all.find(x=>x.id===a.sid)?.name||a.sid)}">View profile</button></td></tr>`).join('')}</tbody></table>`:''}</div>`}).join('')||'<div class="card empty">No drives posted yet.</div>')}
+function renderAssign(){const q=($('#aq')?.value||'').toLowerCase(),F=allUsers().filter(u=>u.role==='faculty'),L=cohortAll().filter(s=>q?(s.name+s.roll).toLowerCase().includes(q):s.live).slice(0,25);
+ $('#assignBox').innerHTML=L.length?`<table class="list"><thead><tr><th>Student</th><th>Dept</th><th>Mentor</th></tr></thead><tbody>${L.map(s=>`<tr><td><b>${esc(s.name)}</b>${s.live?' <span class="pill ok">Live</span>':''}<div class="hint" style="margin:0">${esc(s.roll)}</div></td><td>${s.dept}</td><td><select data-assign="${s.id}" style="width:auto">${F.map(f=>`<option value="${f.id}"${mentorOf(s)===f.id?' selected':''}>${esc(f.name)} (${f.dept})</option>`).join('')}</select></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No matches.</div>'}
+document.addEventListener('input',e=>{if(e.target.id==='aq')renderAssign()});
+document.addEventListener('change',e=>{const t=e.target;
+ if(t.dataset.taskSt){const T=LS('pp.tasks',{}),k=(T[ME.id]||[]).find(x=>x.id===t.dataset.taskSt);if(k){k.status=t.value;LSset('pp.tasks',T);notify(mentorOf({id:ME.id,dept:myDept()}),`${ME.name} marked "${k.t}" as ${k.status}.`);renderTasks()}}
+ else if(t.dataset.assign){const a=LS('pp.assign',{});a[t.dataset.assign]=t.value;LSset('pp.assign',a);notify(t.value,'A student was assigned to you by the administrator.');toast('Mentor updated')}
+ else if(t.dataset.appst){const [d,sid]=t.dataset.appst.split('|'),A=LS('pp.apps',{}),x=(A[d]||[]).find(a=>a.sid===sid);if(x){x.status=t.value;LSset('pp.apps',A);notify(sid,`Your application status changed to ${t.value}.`);toast('Status updated')}}});
+
+/* ---------- Student: skill gap + mentor notes ---------- */
+const keysOf=sk=>new Set((sk||[]).map(s=>ALIAS[s.toLowerCase()]||CAT.find(c=>c.toLowerCase()===s.toLowerCase())).filter(Boolean));
+const myKeys=()=>keysOf(state.placement.skills);
+function renderGap(){
+ const r=state.placement.targetRole,b=$('#gapBody'),mb=$('#mentorBox');if(!b)return;
+ const notes=(LS('pp.notes',{})[ME?.id]||[]).slice().reverse();
+ mb.innerHTML=notes.length?notes.map(n=>`<div class="note">${esc(n.t)}<small>${esc(n.by)} · ${new Date(n.d).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</small></div>`).join(''):'<div class="empty">No notes from your mentor yet.</div>';
+ if(!r){b.innerHTML='<div class="empty">Choose a target role to see which skills you have and which to build next.</div>';return}
+ const need=ROLES[r],mine=levelsOf(state.placement),miss=need.filter(k=>!(mine.get(k)&&LVW[mine.get(k).lv]>=.7)),m=Math.round(need.reduce((a,k)=>a+(mine.get(k)?wt(mine.get(k)):0),0)/need.length*100),peers=cohortAll().filter(s=>s.dept===(deptOf(state.profile.branch)||ME?.dept||'CSE'));
+ b.innerHTML=`<div class="gap-top"><div class="ring" style="--p:${m}"><b>${m}%</b></div><div><div class="sub-h" style="margin:0">${need.length-miss.length} of ${need.length} core skills covered</div><div class="hint">${miss.length?'Close the gaps below to become a stronger fit.':'You cover every core skill for this role.'}</div></div></div>
+ <div class="chips">${need.map(k=>`<span class="chip ${(mine.get(k)&&LVW[mine.get(k).lv]>=.7)?'ok':'no'}">${(mine.get(k)&&LVW[mine.get(k).lv]>=.7)?'✔':'+'} ${k}${mine.get(k)?' · '+mine.get(k).lv:''}</span>`).join('')}</div>
+ ${miss.length?`<p class="sub-h" style="margin:16px 0 4px">Build next</p><table class="list"><tbody>${miss.map(k=>`<tr><td><b>${k}</b>${mine.get(k)?' <span class="pill">'+mine.get(k).lv+' → level up</span>':''}<div class="hint" style="margin:0">${HOWTO[k]}</div></td><td class="num">${Math.round(supply(peers,k))}% of peers</td></tr>`).join('')}</tbody></table>`:''}`;
+}
+
+/* ================= Extra analytics (faculty + student) ================= */
+const pct=(a,p)=>{const s=[...a].sort((x,y)=>x-y);return s.length?s[Math.min(s.length-1,Math.floor(p*s.length))]:0};
+const aCard=(t,sub,body,x='')=>`<div class="card chart-card"${x?` style="${x}"`:''}><div class="chart-head"><div><h3>${t}</h3><p>${sub}</p></div></div>${body}</div>`;
+
+/* Faculty: CGPA vs readiness scatter with an "under-prepared despite grades" zone */
+function scatterSVG(L){
+ const P=L.filter(s=>s.cgpa>0);if(!P.length)return'<div class="empty">No students with a CGPA yet.</div>';
+ const W=520,H=290,m={l:40,r:12,t:12,b:40},pw=W-m.l-m.r,ph=H-m.t-m.b,x=v=>m.l+(v-5)/5*pw,y=v=>m.t+ph-v/100*ph;
+ const col=s=>s.r<50||s.backlogs?'var(--critical)':s.r>=70?'var(--good)':'var(--accent)';
+ const odd=P.filter(s=>s.cgpa>=7.5&&s.r<50).length;
+ return `<svg viewBox="0 0 ${W} ${H}" style="width:100%" role="img" aria-label="Scatter plot of CGPA against career readiness">
+ <rect x="${x(7.5)}" y="${y(50)}" width="${x(10)-x(7.5)}" height="${y(0)-y(50)}" fill="var(--critical)" opacity=".08"/>
+ ${[0,25,50,75,100].map(v=>`<line x1="${m.l}" x2="${W-m.r}" y1="${y(v)}" y2="${y(v)}" stroke="var(--grid)"/><text x="${m.l-6}" y="${y(v)+4}" text-anchor="end" class="tick">${v}</text>`).join('')}
+ ${[5,6,7,8,9,10].map(v=>`<text x="${x(v)}" y="${H-24}" text-anchor="middle" class="tick">${v}</text>`).join('')}
+ <line x1="${x(7.5)}" x2="${x(7.5)}" y1="${m.t}" y2="${y(0)}" stroke="var(--axis)" stroke-dasharray="4 4"/><line x1="${m.l}" x2="${W-m.r}" y1="${y(50)}" y2="${y(50)}" stroke="var(--axis)" stroke-dasharray="4 4"/>
+ ${P.map(s=>`<circle cx="${x(Math.max(5,s.cgpa)).toFixed(1)}" cy="${y(s.r).toFixed(1)}" r="4" fill="${col(s)}" fill-opacity=".75"><title>${esc(s.name)} · CGPA ${s.cgpa} · readiness ${s.r}%${s.backlogs?' · '+s.backlogs+' backlog(s)':''}</title></circle>`).join('')}
+ <text x="${x(10)-4}" y="${y(0)-6}" text-anchor="end" font-size="10" fill="var(--critical)">Strong grades, low readiness: ${odd}</text>
+ <text x="${(m.l+W-m.r)/2}" y="${H-6}" text-anchor="middle" class="tick">CGPA</text>
+ <text transform="translate(11 ${m.t+ph/2}) rotate(-90)" text-anchor="middle" class="tick">Readiness %</text></svg>
+ <div class="hint">Red: readiness under 50 or active backlogs · green: 70+ · blue: in between. Hover a dot for the name.</div>`}
+
+/* Faculty: skill coverage by readiness band (heatmap) */
+function heatmap(L){
+ const B=[['Below 40',0,40],['40–54',40,55],['55–69',55,70],['70–84',70,85],['85+',85,101]].map(([l,a,b])=>({l,g:L.filter(s=>s.r>=a&&s.r<b)})),K=CAT.slice().sort((a,b)=>DEMAND[b]-DEMAND[a]).slice(0,12);
+ const cell=(g,k)=>{if(!g.length)return'<span class="hint" style="text-align:center;margin:0">–</span>';const v=Math.round(g.filter(s=>s.skills.includes(k)).length/g.length*100);return `<span style="text-align:center;padding:6px 0;border-radius:4px;background:color-mix(in srgb,var(--accent) ${v}%,var(--surface-2));color:${v>55?'#fff':'var(--text-primary)'}">${v}</span>`};
+ return `<div style="display:grid;grid-template-columns:120px repeat(5,minmax(0,1fr));gap:3px;font-size:12px;align-items:center;overflow-x:auto"><span></span>${B.map(b=>`<b style="text-align:center">${b.l}<div class="hint" style="margin:0;font-weight:400">${b.g.length} students</div></b>`).join('')}${K.map(k=>`<span>${k}</span>`+B.map(b=>cell(b.g,k)).join('')).join('')}</div>
+ <div class="hint" style="margin-top:10px">Share of students in each readiness band who hold the skill (top 12 by employer demand). Skills that stay pale in the upper bands are the ones to coach.</div>`}
+
+/* Faculty: placement funnel */
+function facAnalytics(L){
+ const n=L.length||1,st=[['All mentees',L.length],['Profile started',L.filter(s=>!s.live||s.started).length],['5+ skills',L.filter(s=>s.skills.length>=5).length],['Has internship',L.filter(s=>s.intern>0).length],['Readiness 70+',L.filter(s=>s.r>=70).length],['Hired',L.filter(s=>s.status==='Placed').length]];
+ const drop=st.slice(1).map((s,i)=>({n:s[0],d:st[i][1]-s[1]})).sort((a,b)=>b.d-a.d)[0];
+ return `<section id="f-an"><h2>Analytics</h2><p class="lede">Where your mentees are stuck, and which skills separate the ready from the rest.</p>
+ <div data-subs><div class="pane" data-title="Cohort"><div class="grid g2">${aCard('Grades vs readiness','Each dot is a mentee; the shaded zone has strong grades but weak profiles',scatterSVG(L))}
+ ${aCard('Career funnel','Share of mentees reaching each milestone',hb(st.map(([l,c],i)=>({l:`${l} · ${c}`,v:c/n*100,c:i===5?'var(--good)':''})))+`<div class="hint" style="margin-top:12px">${drop&&drop.d>0?`Biggest drop-off: <b>${esc(drop.n)}</b> (${drop.d} students lost at this step).`:'No drop-offs yet.'}</div>`)}</div>
+ ${aCard('Skill coverage by readiness band','What high-readiness students have that others lack',heatmap(L),'margin-top:16px')}</div><div class="pane" data-title="Progress and follow-through">${progressHeat(L)}${taskRate(L)}</div></div></section>`}
+
+/* Student: radar, trend and peer benchmark */
+function renderStudentAnalytics(){
+ if(!ME||ME.role!=='student'||!$('#anRadar'))return;
+ renderSim();renderProj();
+ const r=state.placement.targetRole,mine=levelsOf(state.placement);
+ if(!r)$('#anRadar').innerHTML='<div class="empty">Choose a target role in Skill gap analysis to see your radar.</div>';
+ else{const ks=ROLES[r],N=ks.length,cx=150,cy=140,R=90,pt=(i,v)=>{const a=-Math.PI/2+i*2*Math.PI/N;return[cx+Math.cos(a)*R*v/100,cy+Math.sin(a)*R*v/100]},poly=f=>ks.map((k,i)=>pt(i,f(k)).map(z=>z.toFixed(1)).join(',')).join(' ');
+  $('#anRadar').innerHTML=`<svg viewBox="-30 0 360 285" style="width:100%;max-width:420px;display:block;margin:auto" role="img" aria-label="Radar of your skill levels against employer demand for ${esc(r)}">${[25,50,75,100].map(g=>`<polygon points="${poly(()=>g)}" fill="none" stroke="var(--grid)"/>`).join('')}${ks.map((k,i)=>{const[a,b]=pt(i,100),[tx,ty]=pt(i,122);return `<line x1="${cx}" y1="${cy}" x2="${a.toFixed(1)}" y2="${b.toFixed(1)}" stroke="var(--grid)"/><text x="${tx.toFixed(1)}" y="${(ty+4).toFixed(1)}" text-anchor="middle" font-size="10" fill="var(--text-secondary)">${k}</text>`}).join('')}<polygon points="${poly(k=>DEMAND[k])}" fill="none" stroke="var(--text-muted)" stroke-dasharray="5 4" stroke-width="1.5"/><polygon points="${poly(k=>mine.get(k)?wt(mine.get(k))*100:0)}" fill="var(--accent)" fill-opacity=".3" stroke="var(--accent)" stroke-width="2"/></svg><div class="hint">Dashed: employer demand. Filled: your level (Beginner 40 · Intermediate 70 · Advanced 100).</div>`}
+ $('#anTrend').innerHTML=trendBlock(ME.id)||'<div class="empty">Your trend appears once you have saved your profile.</div>';
+ const me=liveRecord(ME),dept=deptOf(state.profile.branch)||ME.dept||'CSE',peers=cohortAll().filter(s=>s.dept===dept&&s.id!==ME.id&&(!s.live||s.started));
+ if(!peers.length){$('#anBench').innerHTML='<div class="empty">No department peers to compare with yet.</div>';return}
+ const mk=[['Readiness',me.r,s=>s.r],['CGPA (×10)',(me.cgpa||0)*10,s=>s.cgpa*10],['Skills covered (of 16)',me.skills.length/16*100,s=>s.skills.length/16*100],['Certificates (target 5)',Math.min(100,me.certs/5*100),s=>Math.min(100,s.certs/5*100)]];
+ const bar=(v,c)=>`<div style="height:7px;width:${Math.max(1,Math.min(100,v))}%;background:${c};border-radius:0 3px 3px 0;margin:2px 0"></div>`;
+ const rank=Math.round(peers.filter(s=>s.r<me.r).length/peers.length*100);
+ $('#anBench').innerHTML=`<div class="sub-h">Your readiness is ahead of ${rank}% of ${peers.length} ${esc(dept)} peers</div>`+mk.map(([l,v,f])=>{const a=peers.map(f);return `<div style="margin-bottom:12px"><div class="row" style="justify-content:space-between;align-items:center"><b>${l}</b><span class="hint" style="margin:0">You ${Math.round(v)} · dept avg ${Math.round(avg(a))} · top 25% ${Math.round(pct(a,.75))}</span></div>${bar(v,'var(--accent)')}${bar(avg(a),'var(--text-muted)')}${bar(pct(a,.75),'var(--good)')}</div>`}).join('')+'<div class="hint"><span style="color:var(--accent)">■</span> You · <span style="color:var(--text-muted)">■</span> Department average · <span style="color:var(--good)">■</span> Top 25%</div>';
+}
+
+/* ================= Batch 2: mentee progress heatmap, task completion, what-if simulator, CGPA projection ================= */
+const heatCell=v=>v==null?'<span class="hint" style="text-align:center;margin:0">–</span>':`<span style="text-align:center;padding:6px 0;border-radius:4px;background:color-mix(in srgb,var(--accent) ${v}%,var(--surface-2));color:${v>55?'#fff':'var(--text-primary)'}">${v}</span>`;
+
+/* Faculty: mentee progress heatmap (readiness by month) */
+function progressHeat(L){
+ const H=LS('pp.hist',{}),rows=L.filter(s=>H[s.id]?.length).map(s=>({s,h:H[s.id]}));
+ if(!rows.length)return aCard('Mentee progress over time','Readiness by month for each mentee','<div class="empty">No history yet. Snapshots appear as registered mentees save their profiles.</div>','margin-top:16px');
+ const ms=[...new Set(rows.flatMap(r=>r.h.map(x=>x.m)))].sort(),at=(h,m)=>h[0].m>m?null:h.filter(x=>x.m<=m).at(-1).r;
+ rows.forEach(r=>{r.v=ms.map(m=>at(r.h,m));r.d=r.v.at(-1)-r.v.find(x=>x!=null)});
+ rows.sort((a,b)=>a.d-b.d);
+ const g=`display:grid;grid-template-columns:150px repeat(${ms.length},minmax(44px,1fr)) 64px;gap:3px;font-size:12px;align-items:center;min-width:${220+ms.length*48}px`;
+ return aCard('Mentee progress over time','Readiness (%) by month. Students who slipped most are listed first',`<div style="overflow-x:auto"><div style="${g}"><span></span>${ms.map(m=>`<b style="text-align:center">${mlab(m)}</b>`).join('')}<b style="text-align:right">Change</b>${rows.slice(0,20).map(r=>`<span>${esc(r.s.name)}</span>`+r.v.map(heatCell).join('')+`<b style="text-align:right;color:${r.d<0?'var(--critical)':r.d>0?'var(--good-text)':'var(--text-muted)'}">${r.d>0?'+':''}${r.d}</b>`).join('')}</div></div>${rows.length>20?`<div class="hint">Showing 20 of ${rows.length} mentees.</div>`:''}<div class="hint" style="margin-top:8px">Sample students show simulated history for the last three months; registered students are tracked from their saved profiles.</div>`,'margin-top:16px')}
+
+/* Faculty: action-item completion rate */
+function taskRate(L){
+ const T=LS('pp.tasks',{}),today=new Date().toISOString().slice(0,10),
+ rows=L.map(s=>{const t=T[s.id]||[];return{s,n:t.length,d:t.filter(x=>x.status==='Done').length,p:t.filter(x=>x.status==='In progress').length,o:t.filter(x=>x.status!=='Done'&&x.due&&x.due<today).length}}).filter(r=>r.n);
+ const sum=k=>rows.reduce((a,r)=>a+r[k],0),tot=sum('n'),D=sum('d'),P=sum('p'),O=sum('o'),td=tot-D-P;
+ if(!tot)return aCard('Action-item completion','How well mentees follow through on what you assign','<div class="empty">No action items assigned yet. Open a student and assign one to start tracking completion.</div>','margin-top:16px');
+ const seg=(v,c,l)=>v?`<div style="flex:${v};background:${c}" title="${l}: ${v}"></div>`:'';
+ return aCard('Action-item completion','How well mentees follow through on what you assign',
+ `<div class="grid g3" style="margin-bottom:12px">${tile('Completion rate',Math.round(D/tot*100)+'<small>%</small>',D+' of '+tot+' items done')}${tile('In progress',P,td+' not started')}${tile('Overdue',`<span style="color:${O?'var(--critical)':'var(--good-text)'}">${O}</span>`,'Past due date, not done')}</div>
+ <div style="display:flex;height:12px;border-radius:6px;overflow:hidden;background:var(--surface-2);margin-bottom:6px" role="img" aria-label="${D} done, ${P} in progress, ${td} to do">${seg(D,'var(--good)','Done')}${seg(P,'var(--accent)','In progress')}${seg(td,'var(--axis)','To do')}</div>
+ <div class="hint" style="margin:0 0 14px"><span style="color:var(--good)">■</span> Done · <span style="color:var(--accent)">■</span> In progress · <span style="color:var(--text-muted)">■</span> To do</div>
+ <p class="sub-h">Completion by student</p>`+hb(rows.sort((a,b)=>a.d/a.n-b.d/b.n).slice(0,10).map(r=>({l:`${r.s.name} · ${r.d}/${r.n}${r.o?' · '+r.o+' overdue':''}`,v:r.d/r.n*100,c:r.o?'var(--critical)':''}))),'margin-top:16px')}
+
+/* Student: what-if readiness simulator */
+let SIM={i:0,c:0,p:0,s:0,b:0},CGT=8.5;
+function simState(o){const a=state.academics,p=state.placement;return{academics:{...a,backlogs:o.b?0:a.backlogs},marks:state.marks,prep:state.prep,certs:state.certs.concat(Array(o.c).fill({})),placement:{...p,internships:(num(p.internships)||0)+o.i,projects:(num(p.projects)||0)+o.p,skills:p.skills.concat(simSkills(p,o.s)),levels:{...(p.levels||{}),...Object.fromEntries(simSkills(p,o.s).map(k=>[k,'Intermediate']))}}}}
+function simSkills(p,n){const have=levelsOf(p),need=p.targetRole&&ROLES[p.targetRole]?ROLES[p.targetRole]:[],by=(a,b)=>DEMAND[b]-DEMAND[a];return[...need.filter(k=>!have.has(k)).sort(by),...CAT.filter(k=>!have.has(k)&&!need.includes(k)).sort(by)].slice(0,n)}
+const simR=o=>metrics(simState(o)).readiness,SIM0={i:0,c:0,p:0,s:0,b:0};
+function renderSim(){
+ const el=$('#anSim');if(!el)return;const cur=metrics(),bk=cur.backlogs>0;
+ const sl=(k,l,mx)=>`<div class="field"><label for="sim-${k}">${l}: <b id="simv-${k}">${SIM[k]}</b></label><input id="sim-${k}" data-sim="${k}" type="range" min="0" max="${mx}" step="1" value="${SIM[k]}"></div>`;
+ const wins=[['Add 1 internship',{i:1}],['Add 2 certificates',{c:2}],['Add 1 project or hackathon',{p:1}],['Add 2 skills',{s:2}],...(bk?[['Clear active backlogs',{b:1}]]:[])].map(([l,o])=>({l,g:simR({...SIM0,...o})-cur.readiness})).sort((a,b)=>b.g-a.g);
+ el.innerHTML=`<div class="grid g2"><div>${sl('i','Extra internships',3)}${sl('c','Extra certificates',6)}${sl('p','Extra projects / hackathons',6)}${sl('s','Extra skills',8)}${bk?`<label style="display:flex;gap:6px;align-items:center"><input type="checkbox" data-sim="b" style="width:auto"${SIM.b?' checked':''}>Clear my active backlogs</label>`:''}<button class="ghost small" id="simReset" type="button" style="margin-top:8px">Reset</button></div><div id="simOut"></div></div>
+ <p class="sub-h" style="margin-top:16px">Quick wins, ranked by gain</p><table class="list"><tbody>${wins.map(w=>`<tr><td>${w.l}</td><td class="num">${w.g>0.05?'+'+w.g.toFixed(1)+' pts':'no change'}</td></tr>`).join('')}</tbody></table>`;
+ simOut()}
+function simOut(){
+ const o=$('#simOut');if(!o)return;['i','c','p','s'].forEach(k=>{const v=$('#simv-'+k);if(v)v.textContent=SIM[k]});
+ const A=metrics(),B=metrics(simState(SIM)),c=Math.round(A.readiness),n=Math.round(B.readiness),d=n-c,lab=r=>r>=75?'Strong':r>=50?'On track':'Needs work';
+ const ch=B.strength.map((s,i)=>[s.label,Math.round(A.strength[i].value),Math.round(s.value)]).filter(x=>x[1]!==x[2]);
+ o.innerHTML=`<div class="card tile"><div class="k">Projected readiness</div><div class="v">${n}<small>%</small> <span style="font-size:14px;color:${d>0?'var(--good-text)':'var(--text-muted)'}">${d>0?'▲ +'+d:'no change'}</span></div><div class="s">Now ${c}% (${lab(c)}) → ${n}% (${lab(n)})</div><div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${n}" aria-label="Projected readiness"><div style="width:${n}%"></div></div>
+ ${ch.length?`<table class="list" style="margin-top:10px"><tbody>${ch.map(x=>`<tr><td>${x[0]}</td><td class="num">${x[1]}% → ${x[2]}%</td></tr>`).join('')}</tbody></table>`:'<div class="hint" style="margin-top:10px">Move a slider to see the effect.</div>'}</div>`}
+
+/* Student: CGPA projection */
+function renderProj(){
+ const el=$('#anProj');if(!el)return;
+ el.innerHTML=`<div class="field" style="max-width:200px"><label for="cgT">Target CGPA</label><input id="cgT" type="number" min="0" max="10" step="0.1" value="${CGT}" data-cgt></div><div id="cgOut"></div>`;projOut()}
+function projOut(){
+ const o=$('#cgOut');if(!o)return;const pts=metrics().sg.map((v,i)=>({i,v})).filter(p=>p.v!=null);
+ if(pts.length<2){o.innerHTML='<div class="empty">Enter at least two semester SGPAs in Academics to see a projection.</div>';return}
+ const n=pts.length,last=pts.at(-1).i,rem=SEMS-1-last;
+ if(rem<=0){o.innerHTML='<div class="empty">All 8 semesters are entered, so your CGPA is final.</div>';return}
+ const S=pts.reduce((a,p)=>a+p.v,0),mx=avg(pts.map(p=>p.i)),my=S/n,sl=pts.reduce((a,p)=>a+(p.i-mx)*(p.v-my),0)/pts.reduce((a,p)=>a+(p.i-mx)**2,0);
+ const cl=v=>Math.max(0,Math.min(10,v)),fut=Array.from({length:rem},(_,k)=>({i:last+1+k,v:cl(my+sl*(last+1+k-mx))}));
+ const trend=(S+fut.reduce((a,p)=>a+p.v,0))/(n+rem),hold=avg(pts.slice(-2).map(p=>p.v)),steady=(S+hold*rem)/(n+rem),T=+CGT||0,need=(T*(n+rem)-S)/rem;
+ const W=520,H=230,m={l:32,r:12,t:14,b:28},pw=W-m.l-m.r,ph=H-m.t-m.b,lo=Math.max(0,Math.floor(Math.min(...pts.map(p=>p.v),...fut.map(p=>p.v),T||10)-1)),hi=10,x=i=>m.l+i/(SEMS-1)*pw,y=v=>m.t+ph-(v-lo)/(hi-lo)*ph;
+ const path=a=>a.map((p,k)=>(k?'L':'M')+x(p.i).toFixed(1)+','+y(p.v).toFixed(1)).join('');
+ const svg=`<svg viewBox="0 0 ${W} ${H}" style="width:100%" role="img" aria-label="SGPA history with projected semesters and target CGPA">${Array.from({length:hi-lo+1},(_,k)=>lo+k).map(t=>`<line x1="${m.l}" x2="${W-m.r}" y1="${y(t)}" y2="${y(t)}" stroke="var(--grid)"/><text x="${m.l-6}" y="${y(t)+4}" text-anchor="end" class="tick">${t}</text>`).join('')}${Array.from({length:SEMS},(_,i)=>`<text x="${x(i)}" y="${H-8}" text-anchor="middle" class="tick">S${i+1}</text>`).join('')}
+ ${T>=lo&&T<=hi?`<line x1="${m.l}" x2="${W-m.r}" y1="${y(T)}" y2="${y(T)}" stroke="var(--good)" stroke-dasharray="2 4"/><text x="${W-m.r}" y="${y(T)-4}" text-anchor="end" font-size="10" fill="var(--good-text)">Target ${T}</text>`:''}
+ <path d="${path(pts)}" fill="none" stroke="var(--series-1)" stroke-width="2"/><path d="${path([pts.at(-1),...fut])}" fill="none" stroke="var(--series-1)" stroke-width="2" stroke-dasharray="5 4"/>
+ ${pts.map(p=>`<circle cx="${x(p.i)}" cy="${y(p.v)}" r="4" fill="var(--series-1)"><title>Sem ${p.i+1}: ${p.v}</title></circle>`).join('')}${fut.map(p=>`<circle cx="${x(p.i)}" cy="${y(p.v)}" r="4" fill="var(--surface-1)" stroke="var(--series-1)" stroke-width="2"><title>Sem ${p.i+1} (projected): ${p.v.toFixed(2)}</title></circle>`).join('')}</svg>`;
+ const nd=need>10?`<span style="color:var(--critical)">${need.toFixed(2)}</span>`:need<=0?'<span style="color:var(--good-text)">Secured</span>':need.toFixed(2);
+ o.innerHTML=svg+`<div class="grid g3" style="margin-top:12px">${tile('Final CGPA if trend continues',trend.toFixed(2),'Linear trend of your SGPAs')}${tile('Final CGPA if you hold steady',steady.toFixed(2),'Last two semesters average '+hold.toFixed(2))}${tile('SGPA needed for '+T,nd,need>10?'Out of reach. Try a lower target':need<=0?'Target already secured':'Average over the next '+rem+' semester'+(rem>1?'s':''))}</div><div class="hint" style="margin-top:8px">Solid: your SGPAs · dashed: projection. Assumes every semester has equal credit weight, so treat it as an estimate.</div>`}
+document.addEventListener('input',e=>{const t=e.target,k=t.dataset?.sim;if(k){SIM[k]=t.type==='checkbox'?+t.checked:+t.value;simOut()}else if(t.dataset?.cgt!==undefined){CGT=t.value;projOut()}});
+document.addEventListener('click',e=>{if(e.target.id==='simReset'){SIM={...SIM0};renderSim()}});
+
+/* ---------- Readiness badges: Gold 75+, Silver 60-74, Bronze 50-59 ---------- */
+const TIERS=[{k:'gold',label:'Gold',min:75},{k:'silver',label:'Silver',min:60},{k:'bronze',label:'Bronze',min:50}];
+const tierOf=r=>TIERS.find(t=>r>=t.min)||null,nextTier=r=>[...TIERS].reverse().find(t=>r<t.min)||null;
+const bdgSvg=(k,w)=>`<svg class="bdg" viewBox="0 0 64 80" width="${w}" height="${Math.round(w*1.25)}" role="img" aria-label="${k==='none'?'No badge yet':TIERS.find(t=>t.k===k).label+' badge'}"><use href="#bdg-${k}" width="64" height="80"/></svg>`;
+function badgeChip(r){const t=tierOf(r);return t?`<span class="bchip bchip-${t.k}" title="${t.label} badge · readiness ${r}%"><svg viewBox="0 0 64 80" width="12" height="15" aria-hidden="true"><use href="#bdg-${t.k}" width="64" height="80"/></svg>${t.label}</span>`:`<span class="bchip bchip-none" title="No badge yet · readiness ${r}%">No badge</span>`}
+function badgeHero(r){const t=tierOf(r),nx=nextTier(r),k=t?t.k:'none',lo=t?t.min:0,pc=nx?Math.max(0,Math.min(100,(r-lo)/(nx.min-lo)*100)):100;
+ return `<div class="bd-hero bd-${k}">${bdgSvg(k,64)}<div><div class="bd-t">${t?t.label+' badge':'No badge yet'}</div><div class="bd-s">Readiness ${r}% · ${nx?(nx.min-r)+' pts to '+nx.label:'Top tier reached'}</div><div class="bd-meter"><i style="width:${pc}%"></i></div></div></div>`}
+function badgeStrip(){const el=$('#badgeStrip');if(!el)return;const all=cohortAll().filter(s=>mentorOf(s)===ME?.id),cur=$('#fr').value,c=k=>all.filter(s=>k==='none'?!tierOf(s.r):tierOf(s.r)?.k===k).length;
+ el.innerHTML=[...TIERS.map(t=>[t.k,t.label]),['none','No badge yet']].map(([k,l])=>`<button type="button" class="bs${cur===k?' on':''}" data-bfilter="${k}" aria-pressed="${cur===k}">${k==='none'?'<span class="bs-dot"></span>':`<svg width="22" height="28" viewBox="0 0 64 80" aria-hidden="true"><use href="#bdg-${k}" width="64" height="80"/></svg>`}<span><b>${c(k)}</b><small>${l}</small></span></button>`).join('')+(cur!=='all'?'<button type="button" class="bs clear" data-bfilter="all">Show all</button>':'')+'<span class="hint" style="margin:0">Gold 75+ · Silver 60–74 · Bronze 50–59</span>'}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-bfilter]');if(b&&$('#fr')){$('#fr').value=b.dataset.bfilter;facTable()}});
+
+/* ---------- Faculty ---------- */
+function renderFaculty(){snapshotAll();
+ const FD=ME?.dept||'CSE',L=cohortAll().filter(s=>mentorOf(s)===ME.id),live=L.filter(s=>s.live).length,n=L.length,risk=L.filter(s=>s.r<50||s.backlogs>0).length,ar=Math.round(avg(L.map(s=>s.r)));
+ const bins=[['Below 40',0,40],['40–54',40,55],['55–69',55,70],['70–84',70,85],['85+',85,101]].map(([l,a,b])=>({l,c:L.filter(s=>s.r>=a&&s.r<b).length,low:b<=55})),mx=Math.max(...bins.map(b=>b.c));
+ const gaps=CAT.map(k=>({l:k,v:100-supply(L,k)})).sort((a,b)=>b.v-a.v).slice(0,8).map(g=>({...g,c:g.v>65?'var(--critical)':g.v>45?'var(--warning)':''}));
+ $('#app-faculty').innerHTML=shell('Faculty',[['f-over','Overview'],['f-ins','Insights'],['f-an','Analytics'],['f-stu','Students']],'')+`<main>
+ <section id="f-over"><div class="head"><div><h2 class="disp">Your mentees, Batch 2026</h2><p class="lede" style="margin:0">Readiness and skill gaps across the students you mentor. <span class="sample">${live} registered student${live===1?'':'s'} (live) plus ${n-live} sample records.</span></p></div><div class="row" style="gap:8px"><button data-refresh>Refresh</button><button data-export="cse">Export CSV</button></div></div>
+  <div class="grid g4">${tile('Students',n,live+' registered · '+(n-live)+' sample')}${tile('Average CGPA',avg(L.map(s=>s.cgpa).filter(Boolean)).toFixed(2)+'<small> / 10</small>','Across the cohort')}${tile('Average readiness',ar+'<small>%</small>','Weighted career readiness score',meter(ar))}${tile('Need attention',`<span style="color:var(--critical)">${risk}</span>`,'Readiness below 50 or active backlogs')}</div></section>
+ <section id="f-ins"><div class="grid g2">
+  <div class="card chart-card"><div class="chart-head"><div><h3>Readiness distribution</h3><p>Number of students in each readiness band</p></div></div><div class="hist">${bins.map(b=>`<div>${b.c}<i class="${b.low?'low':''}" style="height:${b.c/mx*82}%"></i>${b.l}</div>`).join('')}</div></div>
+  <div class="card chart-card"><div class="chart-head"><div><h3>Widest skill gaps</h3><p>Share of the cohort without each skill</p></div></div>${hb(gaps)}</div></div></section>
+ ${facAnalytics(L)}
+ <section id="f-stu"><div class="head"><div><h2>Student roster</h2><p class="lede" style="margin:0">Select a student to review gaps and leave a note.</p></div><span class="pill" id="fCount"></span></div>
+  <div class="bstrip" id="badgeStrip"></div>
+  <div class="card"><div class="tools"><input class="fl" id="fq" placeholder="Search by name or roll number" aria-label="Search students"><select class="fl" id="fr" aria-label="Filter"><option value="all">All students</option><option value="risk">Need attention</option><option value="ready">Career ready (70+)</option><option value="gold">Gold badge</option><option value="silver">Silver badge</option><option value="bronze">Bronze badge</option><option value="none">No badge yet</option><option value="live">Registered students only</option></select><select class="fl" id="fs" aria-label="Sort"><option value="low">Readiness, lowest first</option><option value="high">Readiness, highest first</option><option value="cgpa">CGPA</option><option value="name">Name</option></select></div>
+  <div class="scroll" style="max-height:560px" id="fTable"></div></div></section></main><aside id="drawer" aria-label="Student detail"></aside>`;
+ facTable();
+}
+function facTable(){
+ const q=$('#fq').value.toLowerCase(),m=$('#fr').value,so=$('#fs').value;
+ const L=cohortAll().filter(s=>mentorOf(s)===ME?.id&&(s.name+s.roll).toLowerCase().includes(q)&&(m==='all'||(m==='live'?s.live:m==='risk'?s.r<50||s.backlogs>0:m==='ready'?s.r>=70:m==='none'?!tierOf(s.r):tierOf(s.r)?.k===m)));
+ L.sort(so==='low'?(a,b)=>a.r-b.r:so==='high'?(a,b)=>b.r-a.r:so==='cgpa'?(a,b)=>b.cgpa-a.cgpa:(a,b)=>a.name.localeCompare(b.name));
+ $('#fCount').textContent=L.length+' students';badgeStrip();
+ $('#fTable').innerHTML=L.length?`<table class="list"><thead><tr><th>Student</th><th class="num">CGPA</th><th class="num">Backlogs</th><th class="num">Skills</th><th>Readiness</th><th>Status</th></tr></thead><tbody>${L.map(s=>`<tr data-id="${s.id}" tabindex="0"><td><b>${esc(s.name)}</b>${badgeChip(s.r)}${s.live?' <span class="pill ok">Live</span>':''}<div class="hint" style="margin:0">${esc(s.roll)}${s.live&&s.updatedAt?' · updated '+ago(s.updatedAt):s.live&&!s.started?' · no entries yet':''}</div></td><td class="num">${s.cgpa||'—'}</td><td class="num">${s.backlogs}</td><td class="num">${s.skills.length}/16</td><td><span class="mm"><i style="width:${s.r}%"></i></span>${s.r}</td><td><span class="pill ${ST[s.status]}">${dispSt(s.status)}</span></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No students match these filters.</div>';
+}
+function openStudent(id){
+ const s=cohortAll().find(x=>x.id===id),notes=LS('pp.notes',{})[id]||[];
+ const miss=CAT.filter(k=>!s.skills.includes(k)).sort((a,b)=>DEMAND[b]-DEMAND[a]).slice(0,6);
+ const flags=[s.live&&!s.started&&'Student has not entered any details yet',s.cgpa>0&&s.cgpa<7&&'CGPA is below 7.0, a common eligibility cut-off',s.backlogs&&`${s.backlogs} active backlog${s.backlogs>1?'s':''} to clear`,!s.intern&&'No internship yet',s.certs<2&&'Fewer than two certifications',s.skills.length<5&&'Thin skill profile for core roles'].filter(Boolean);
+ $('#drawer').innerHTML=`<div class="dr-h"><div><h3>${esc(s.name)} ${badgeChip(s.r)}</h3><div class="hint" style="margin:0">${s.roll} · ${esc(DEPTS[s.dept])}</div></div><button class="ghost" data-close aria-label="Close">✕</button></div>
+ <div class="grid g3" style="gap:10px">${tile('CGPA',s.cgpa||'—','')}${tile('Readiness',s.r+'%','')}${tile('Status',`<span style="font-size:16px">${dispSt(s.status)}</span>`,'')}</div>
+ ${s.live?studentDetail(s):''}
+ <p class="sub-h">Skills covered (${s.skills.length})</p><div class="chips">${s.skills.map(k=>`<span class="chip ok">${k}</span>`).join('')||'<span class="hint">None recorded.</span>'}</div>
+ <p class="sub-h">In-demand skills to build</p><div class="chips">${miss.map(k=>`<span class="chip no">+ ${k}</span>`).join('')}</div>
+ <p class="sub-h">Watch points</p>${flags.length?`<ul>${flags.map(f=>`<li>${f}</li>`).join('')}</ul>`:'<div class="hint">No risk flags.</div>'}
+ ${s.live?trendBlock(id)+appsBlock(id):''}${taskBlock(id)}${s.live?meetBlock(id):''}
+ <p class="sub-h">Mentor notes</p>${notes.map(n=>`<div class="note">${esc(n.t)}<small>${esc(n.by)} · ${new Date(n.d).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</small></div>`).join('')}
+ <div class="field" style="margin-top:10px"><label for="noteTxt">Add a note${s.live?' (visible to the student)':''}</label><textarea id="noteTxt" rows="3" placeholder="Suggest a next step"></textarea></div>
+ <button class="primary" data-savenote="${id}">Save note</button>`;
+ $('#drawer').dataset.sid=id;$('#drawer').classList.add('open');
+}
+
+/* ---------- Administrator ---------- */
+function renderAdmin(){snapshotAll();
+ const L=cohortAll(),n=L.length,pl=L.filter(s=>s.status==='Placed'),ar=Math.round(avg(L.map(s=>s.r))),risk=L.filter(s=>s.r<50||s.backlogs>0).length;
+ const stats=['Placed','Interviewing','Looking','Higher studies'],cols=['var(--good)','var(--accent)','var(--warning)','var(--text-muted)'];
+ let acc=0;const cone=stats.map((k,i)=>{const p=L.filter(s=>s.status===k).length/n*100,a=acc;acc+=p;return `${cols[i]} ${a}% ${acc}%`}).join(',');
+ const sk=CAT.map(k=>({l:k,v:supply(L,k),m:DEMAND[k]})).sort((a,b)=>(b.m-b.v)-(a.m-a.v)),top=sk.slice(0,3).map(x=>x.l);
+ const T=trendAll(),ys=T.map(x=>x.v),mo=T.map(x=>x.l),lo=Math.min(...ys)-4,hi=Math.max(...ys)+4;
+ const px=i=>40+i*(500/Math.max(1,ys.length-1)),py=v=>150-(v-lo)/(hi-lo)*130;
+ const line=`<svg viewBox="0 0 560 180" style="width:100%" role="img" aria-label="Average readiness by month">${[lo,(lo+hi)/2,hi].map(v=>`<line x1="40" x2="540" y1="${py(v)}" y2="${py(v)}" stroke="var(--grid)"/><text x="32" y="${py(v)+4}" text-anchor="end" class="tick" fill="var(--text-muted)" font-size="11">${Math.round(v)}</text>`).join('')}<path d="${ys.map((v,i)=>(i?'L':'M')+px(i)+','+py(v)).join('')}" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linejoin="round"/>${ys.map((v,i)=>`<circle cx="${px(i)}" cy="${py(v)}" r="3.5" fill="var(--accent)"/><text x="${px(i)}" y="172" text-anchor="middle" fill="var(--text-muted)" font-size="11">${mo[i]}</text>`).join('')}</svg>`;
+ const depRows=Object.keys(DEPTS).map(d=>{const D=L.filter(s=>s.dept===d),P=D.filter(s=>s.status==='Placed');return `<tr><td><b>${esc(DEPTS[d])}</b></td><td class="num">${D.length}</td><td class="num">${avg(D.map(s=>s.cgpa).filter(Boolean)).toFixed(2)}</td><td><span class="mm"><i style="width:${avg(D.map(s=>s.r))}%"></i></span>${Math.round(avg(D.map(s=>s.r)))}</td><td class="num">${Math.round(P.length/D.length*100)}%</td><td class="num">${P.some(s=>s.pkg)?avg(P.filter(s=>s.pkg).map(s=>s.pkg)).toFixed(1):'—'}</td></tr>`}).join('');
+ $('#app-admin').innerHTML=shell('Administrator',[['a-over','Overview'],['a-dep','Departments'],['a-pl','Outcomes'],['a-sk','Skills'],['a-drv','Drives'],['a-map','Mentors'],['a-acc','Access']],'')+`<main>
+ <section id="a-over"><div class="head"><div><h2 class="disp">Institution overview, Batch 2026</h2><p class="lede" style="margin:0">Career outcomes and skill readiness across all departments. <span class="sample">${L.filter(s=>s.live).length} registered students (live) plus ${L.filter(s=>!s.live).length} sample records.</span></p></div><button data-export="all">Export CSV</button></div>
+  <div class="grid g4">${tile('Students enrolled',n,Object.keys(DEPTS).length+' departments')}${tile('Hired',pl.length+`<small> (${Math.round(pl.length/n*100)}%)</small>`,'Offers accepted so far')}${tile('Average package',avg(pl.filter(s=>s.pkg).map(s=>s.pkg)).toFixed(1)+'<small> LPA</small>','Among hired students')}${tile('Average readiness',ar+'<small>%</small>',risk+' students need attention',meter(ar))}</div></section>
+ <section id="a-dep"><h2>Department performance</h2><p class="lede">Compare readiness and outcomes by department.</p><div class="card"><div class="scroll"><table class="list"><thead><tr><th>Department</th><th class="num">Students</th><th class="num">Avg CGPA</th><th>Avg readiness</th><th class="num">Hired</th><th class="num">Avg LPA</th></tr></thead><tbody>${depRows}</tbody></table></div></div></section>
+ <section id="a-pl"><div class="grid g2">
+  <div class="card chart-card"><div class="chart-head"><div><h3>Career status</h3><p>Where every student stands today</p></div></div><div class="row" style="align-items:center;gap:24px;flex-wrap:nowrap"><div class="donut" style="background:conic-gradient(${cone})" role="img" aria-label="Career status split"></div><div class="legend">${stats.map((k,i)=>`<div><i style="background:${cols[i]}"></i>${dispSt(k)}: <b>${L.filter(s=>s.status===k).length}</b></div>`).join('')}</div></div></div>
+  <div class="card chart-card"><div class="chart-head"><div><h3>Readiness trend</h3><p>Average readiness of registered students, from monthly snapshots</p></div></div>${line}</div></div></section>
+ <section id="a-sk"><h2>Skill supply and employer demand</h2><p class="lede">Bars show the share of students with each skill. The vertical marker shows the share of recruiters asking for it.</p>
+  <div class="card chart-card">${hb(sk)}<p class="hint" style="margin-top:12px"><b>Training priorities:</b> ${top[0]}, ${top[1]} and ${top[2]} show the widest gap between demand and supply.</p></div></section>
+ <section id="a-drv"><h2>Career opportunities</h2><p class="lede">Post a drive; eligible students are listed automatically and notified.</p><div id="driveAdmin"></div></section>
+ <section id="a-map"><h2>Mentor assignment</h2><p class="lede">Students without an assignment default to a mentor from their department.</p><div class="card"><div class="tools"><input id="aq" placeholder="Search any student by name or roll (default: registered students)" aria-label="Search students" style="max-width:420px"></div><div class="scroll" id="assignBox"></div></div></section>
+ <section id="a-acc"><h2>Accounts and access</h2><p class="lede">Disabled accounts cannot sign in.</p><div class="card" style="margin-bottom:16px"><p class="sub-h">Create an account</p>
+  <div class="grid g4"><div class="field"><label for="nRole">Role</label><select id="nRole"><option value="student">Student</option><option value="faculty">Faculty</option></select></div>
+  <div class="field"><label for="nName">Full name</label><input id="nName"></div>
+  <div class="field"><label for="nDept">Department</label><select id="nDept">${Object.entries(DEPTS).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('')}</select></div>
+  <div class="field"><label for="nRoll">Roll no. (students)</label><input id="nRoll"></div></div>
+  <div class="grid g4"><div class="field"><label for="nUser">Username</label><input id="nUser" autocapitalize="none" spellcheck="false"></div>
+  <div class="field"><label for="nPass">Password (8+ characters)</label><input id="nPass"></div>
+  <div class="field" style="align-self:end"><button type="button" data-genpass>Generate password</button></div>
+  <div class="field" style="align-self:end"><button class="primary" type="button" data-createacct>Create account</button></div></div>
+  <div id="acctMsg" class="hint" role="status"></div></div>
+ <div class="card"><div class="scroll" id="accTable"></div></div></section></main>`;
+ accTable();renderDrivesAdmin();renderAssign();
+}
+function accTable(){
+ const dis=LS('pp.disabled',[]);
+ $('#accTable').innerHTML=`<table class="list"><thead><tr><th>User</th><th>Role</th><th>Status</th><th></th></tr></thead><tbody>${allUsers().map(u=>{const d=dis.includes(u.u);return `<tr><td><b>${esc(u.name)}</b><div class="hint" style="margin:0">${u.u}</div></td><td>${ROLE_LABEL[u.role]}</td><td><span class="pill ${d?'bad':'ok'}">${d?'Disabled':'Active'}</span></td><td class="num">${u.role==='admin'?'':`<button class="small" data-toggle-user="${u.u}">${d?'Enable':'Disable'}</button>${cust(u.u)?` <button class="small" data-reset-user="${u.u}">Reset password</button> <button class="small" data-del-user="${u.u}">Remove</button>`:''}`}</td></tr>`}).join('')}</tbody></table>`;
+}
+
+/* ---------- Sign in / out ---------- */
+let ME=null,loginRole='student';
+function setRole(r){loginRole=r;$('#regLink').hidden=r!=='student';$('#rForm').hidden=true;$('#lForm').hidden=false;$('#rErr').textContent='';$('#login').dataset.role=r;document.querySelectorAll('.seg button').forEach(b=>b.setAttribute('aria-selected',b.dataset.r===r));$('#lErr').textContent='';}
+$('#demoList').innerHTML=USERS.filter(u=>u.u!=='rahul.m').map(u=>`<button type="button" data-fill="${u.u}"><span>${ROLE_LABEL[u.role]}</span><code>${u.u} / ${u.p}</code></button>`).join('');
+$('#showReg').addEventListener('click',e=>{e.preventDefault();$('#lForm').hidden=true;$('#regLink').hidden=true;$('#rForm').hidden=false;$('#rName').focus()});
+$('#hideReg').addEventListener('click',e=>{e.preventDefault();setRole('student')});
+$('#rForm').addEventListener('submit',async e=>{
+ e.preventDefault();const g=id=>$('#'+id).value.trim(),un=g('rUser').toLowerCase(),err=m=>$('#rErr').textContent=m;
+ if(!/^[a-z0-9._-]{3,20}$/.test(un))return err('Username: 3–20 letters, numbers, dot, dash or underscore.');
+ if(allUsers().some(x=>x.u===un))return err('That username is already taken.');
+ if($('#rPass').value.length<8)return err('Password must be at least 8 characters.');
+ const u={u:un,...await pwHash($('#rPass').value),role:'student',name:g('rName'),id:'S-'+un,dept:$('#rDept').value,roll:g('rRoll')};
+ const all=LS('pp.users',[]);all.push(u);LSset('pp.users',all);
+ LSset(PROFILE_PREFIX+un,{profile:{name:u.name,roll:u.roll,branch:DEPTS[u.dept]}});
+ $('#rForm').reset();enter(u)});
+$('#login').addEventListener('click',e=>{
+ const r=e.target.closest('.seg button');if(r)setRole(r.dataset.r);
+ const f=e.target.closest('[data-fill]');if(f){const u=USERS.find(x=>x.u===f.dataset.fill);setRole(u.role);$('#lUser').value=u.u;$('#lPass').value=u.p;$('#lPass').focus()}
+ if(e.target.id==='pwTog'){const p=$('#lPass');p.type=p.type==='password'?'text':'password';e.target.textContent=p.type==='password'?'Show':'Hide'}
+});
+$('#lForm').addEventListener('submit',async e=>{
+ e.preventDefault();const un=$('#lUser').value.trim().toLowerCase(),u=allUsers().find(x=>x.u===un),err=m=>$('#lErr').textContent=m;
+ if(Date.now()<FAIL.t)return err(`Too many attempts. Try again in ${Math.ceil((FAIL.t-Date.now())/1000)} s.`);
+ if(!u||!(await verify(u,$('#lPass').value))){if(++FAIL.n>=5)FAIL={n:0,t:Date.now()+30000};return err('Username or password is incorrect.')}FAIL.n=0;
+ if(u.role!==loginRole)return err(`This is a ${ROLE_LABEL[u.role].toLowerCase()} account. Select the ${ROLE_LABEL[u.role]} tab to sign in.`);
+ if(LS('pp.disabled',[]).includes(u.u))return err('This account is disabled. Contact your administrator.');
+ enter(u);
+});
+function enter(u){
+ ME=u;SS.set(u.u);
+ ['student','faculty','admin'].forEach(r=>$('#app-'+r).hidden=r!==u.role);$('#login').hidden=true;
+ document.querySelectorAll('#app-student [data-who]').forEach(e=>e.textContent=u.name);
+ window.scrollTo(0,0);
+ if(u.role==='student'){KEY='placeprep.profile.v1.'+u.u;if(u.seed&&!localStorage.getItem(KEY))LSset(KEY,u.seed);state=load();initAll()}
+ else if(u.role==='faculty')renderFaculty();else renderAdmin();updateBadge();
+}
+function leave(){SS.set(null);ME=null;setRole(loginRole);['student','faculty','admin'].forEach(r=>$('#app-'+r).hidden=true);$('#login').hidden=false;$('#lPass').value='';$('#lErr').textContent='';window.scrollTo(0,0)}
+function closeDrawer(){$('#drawer')?.classList.remove('open');$('#notifPanel').hidden=true}
+document.addEventListener('click',async e=>{
+ const t=e.target,c=s=>t.closest(s);
+ if(c('[data-logout]'))leave();
+ else if(c('[data-toggle-theme]'))$('#themeBtn').click();
+ else if(c('[data-export]'))exportCSV(c('[data-export]').dataset.export==='all'?cohortAll():cohortAll().filter(s=>mentorOf(s)===ME.id),'skillbridge-cohort.csv');
+ else if(c('[data-close]'))closeDrawer();
+ else if(c('[data-bell]')){const P=$('#notifPanel');if(!P.hidden){P.hidden=true;return}const a=LS('pp.notif',{}),L=a[ME.id]||[];P.innerHTML='<b>Notifications</b>'+(L.length?L.map(n=>`<div class="note${n.read?'':' unread'}">${esc(n.t)}<small>${ago(n.d)}</small></div>`).join(''):'<div class="empty">Nothing yet.</div>');P.hidden=false;L.forEach(n=>n.read=true);LSset('pp.notif',a);updateBadge()}
+ else if(c('[data-addtask]')){const id=c('[data-addtask]').dataset.addtask,v=$('#tkTxt').value.trim();if(!v)return toast('Describe the action item.');const T=LS('pp.tasks',{});(T[id]??=[]).push({id:uid(),t:v,due:$('#tkDue').value,status:'To do',by:ME.name});LSset('pp.tasks',T);notify(id,`New action item from ${ME.name}: ${v}`);toast('Assigned');openStudent(id)}
+ else if(c('[data-deltask]')){const [id,k]=c('[data-deltask]').dataset.deltask.split('|'),T=LS('pp.tasks',{});T[id]=(T[id]||[]).filter(x=>x.id!==k);LSset('pp.tasks',T);openStudent(id)}
+ else if(c('[data-postdrive]')){const g=i=>$('#'+i).value.trim(),co=g('dCo'),ro=g('dRole');if(!co||!ro)return toast('Company and role are required.');
+  const d={id:uid(),company:co,role:ro,pkg:g('dPkg')||'—',minCgpa:+g('dMin')||0,noBack:$('#dNb').checked,skills:[...keysOf(g('dSk').split(',').map(x=>x.trim()).filter(Boolean))],deadline:$('#dDl').value},D=LS('pp.drives',[]);D.push(d);LSset('pp.drives',D);
+  cohortAll().filter(s=>s.live&&!elig(s,d).length).forEach(s=>notify(s.id,`New drive: ${co} (${ro}). You are eligible.`));renderDrivesAdmin();toast('Drive posted')}
+ else if(c('[data-deldrive]')){LSset('pp.drives',LS('pp.drives',[]).filter(x=>x.id!==c('[data-deldrive]').dataset.deldrive));renderDrivesAdmin()}
+ else if(c('[data-apply]')){const id=c('[data-apply]').dataset.apply,A=LS('pp.apps',{}),d=LS('pp.drives',[]).find(x=>x.id===id);(A[id]??=[]);if(!A[id].some(a=>a.sid===ME.id))A[id].push({sid:ME.id,status:'Applied',d:new Date().toISOString()});LSset('pp.apps',A);notify(mentorOf({id:ME.id,dept:myDept()}),`${ME.name} applied to ${d.company}.`);renderDrives();toast('Application submitted')}
+ else if(c('[data-genpass]'))$('#nPass').value=Math.random().toString(36).slice(2,6)+Math.random().toString(36).slice(2,6).toUpperCase()+'#7';
+ else if(c('[data-createacct]')){const g=i=>$('#'+i).value.trim(),un=g('nUser').toLowerCase(),pw=$('#nPass').value,role=g('nRole'),name=g('nName'),dept=g('nDept');
+  if(!name)return toast('Enter the full name.');
+  if(!/^[a-z0-9._-]{3,20}$/.test(un))return toast('Username: 3–20 letters, numbers, dot, dash or underscore.');
+  if(allUsers().some(x=>x.u===un))return toast('That username is already taken.');
+  if(pw.length<8)return toast('Password must be at least 8 characters.');
+  const u={u:un,...await pwHash(pw),role,name,id:(role==='student'?'S-':'F-')+un,dept};
+  if(role==='student'){u.roll=g('nRoll');LSset(PROFILE_PREFIX+un,{profile:{name,roll:u.roll,branch:DEPTS[dept]}})}
+  const a=LS('pp.users',[]);a.push(u);LSset('pp.users',a);['nName','nUser','nPass','nRoll'].forEach(i=>$('#'+i).value='');
+  accTable();renderAssign();$('#acctMsg').innerHTML=`✔ ${ROLE_LABEL[role]} account created for <b>${esc(name)}</b>. Username: <b>${esc(un)}</b> · Password: <b>${esc(pw)}</b>. Share these with the user.`}
+ else if(c('[data-del-user]')){const n=c('[data-del-user]').dataset.delUser;if(!confirm('Remove account '+n+'? Their saved data will be deleted.'))return;LSset('pp.users',LS('pp.users',[]).filter(x=>x.u!==n));localStorage.removeItem(PROFILE_PREFIX+n);accTable();renderAssign();toast('Account removed')}
+ else if(c('[data-reset-user]')){const n=c('[data-reset-user]').dataset.resetUser,p=prompt('New password for '+n+' (8+ characters)');if(!p)return;if(p.length<8)return toast('Password is too short.');const a=LS('pp.users',[]);const x=a.find(x=>x.u===n);delete x.p;Object.assign(x,await pwHash(p));LSset('pp.users',a);toast('Password updated')}
+ else if(c('[data-refresh]')){refreshView();toast('Refreshed')}
+ else if(c('[data-fres]')){const s=cohortAll().find(x=>x.id===c('[data-fres]').dataset.fres);if(s?.data.placement.resumeData)openDataUrl(s.data.placement.resumeData)}
+ else if(c('[data-fcert]')){const [sid,cid]=c('[data-fcert]').dataset.fcert.split('|'),f=cohortAll().find(x=>x.id===sid)?.data.certs.find(x=>x.id===cid);if(f?.fileData)openDataUrl(f.fileData)}
+ else if(c('[data-savenote]')){const id=c('[data-savenote]').dataset.savenote,v=$('#noteTxt').value.trim();if(!v)return toast('Write a note first.');
+  const all=LS('pp.notes',{});(all[id]??=[]).push({t:v,by:ME.name,d:new Date().toISOString()});LSset('pp.notes',all);notify(id,`${ME.name} left you a note.`);toast('Note saved');openStudent(id)}
+ else if(c('[data-toggle-user]')){const u=c('[data-toggle-user]').dataset.toggleUser,d=LS('pp.disabled',[]),i=d.indexOf(u);i<0?d.push(u):d.splice(i,1);LSset('pp.disabled',d);accTable();toast(i<0?'Account disabled':'Account enabled')}
+ else if(c('[data-mt]')){const [i,st]=c('[data-mt]').dataset.mt.split('|'),m=MT(),x=m.find(y=>y.id===i);if(x){x.status=st;LSset('pp.meetings',m);notify(x.sid,`Your meeting on ${x.date} was ${st.toLowerCase()}.`);openStudent(x.sid)}}
+ else if(c('[data-addmt]')){const id=c('[data-addmt]').dataset.addmt,d=$('#mtD').value,tm=$('#mtT').value,n=$('#mtN').value.trim();if(!d||!tm||!n)return toast('Add date, time and topic.');const m=MT();m.push({id:uid(),sid:id,date:d,time:tm,topic:n,status:'Confirmed',by:ME.name});LSset('pp.meetings',m);notify(id,`${ME.name} scheduled a meeting on ${d} at ${tm}: ${n}`);toast('Meeting scheduled');openStudent(id)}
+ else if(c('[data-del-prep]')){state.prep=(state.prep||[]).filter(p=>p.id!==c('[data-del-prep]').dataset.delPrep);save();renderPrep()}
+ else if(c('#fTable tr[data-id]'))openStudent(c('#fTable tr[data-id]').dataset.id);
+});
+document.addEventListener('input',e=>{if(e.target.classList.contains('fl'))facTable()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeDrawer();if(e.key==='Enter'&&e.target.matches?.('tr[data-id]'))openStudent(e.target.dataset.id)});
+/* Re-render faculty/admin views in place when a student saves in another tab */
+function refreshView(){
+ if(!ME||ME.role==='student')return;const y=scrollY;
+ if(ME.role==='faculty'){
+  const v={q:$('#fq')?.value||'',r:$('#fr')?.value||'all',s:$('#fs')?.value||'low'},sid=$('#drawer.open')?.dataset.sid,note=$('#noteTxt')?.value||'';
+  renderFaculty();$('#fq').value=v.q;$('#fr').value=v.r;$('#fs').value=v.s;facTable();
+  if(sid){openStudent(sid);$('#noteTxt').value=note}
+ }else renderAdmin();
+ scrollTo(0,y)}
+addEventListener('storage',e=>{if(e.key&&!/^(placeprep\.profile\.v1\.|pp\.)/.test(e.key))return;if(!ME)return;if(ME.role!=='student'){refreshView();toast('Data updated')}else{renderTasks();renderGap();renderDrives();renderStudentAnalytics();renderAgenda()}updateBadge()});
+/* tabs: highlight the section currently in view */
+let spyQ=0;
+const SUBSEL={};
+function initSubs(){document.querySelectorAll('[data-subs]:not([data-ready])').forEach(el=>{el.dataset.ready=1;const ps=[...el.children].filter(c=>c.classList.contains('pane')),key=el.closest('section')?.id||'',bar=document.createElement('div');bar.className='seg';bar.setAttribute('role','tablist');
+ const pick=i=>{SUBSEL[key]=i;ps.forEach((q,k)=>q.classList.toggle('show',k===i));[...bar.children].forEach((b,k)=>{b.classList.toggle('on',k===i);b.setAttribute('aria-selected',k===i)})};
+ ps.forEach((q,i)=>{const b=document.createElement('button');b.type='button';b.className='seg-b';b.setAttribute('role','tab');b.textContent=q.dataset.title;b.onclick=()=>pick(i);bar.appendChild(b)});
+ el.insertBefore(bar,el.firstChild);pick(SUBSEL[key]||0)})}
+function spy(){spyQ=0;const hd=[...document.querySelectorAll('header')].find(h=>h.offsetParent!==null);if(!hd)return;
+ const app=hd.closest('[id^="app-"]'),nv=hd.querySelector('nav'),L=[...nv.querySelectorAll('a')],ids=L.map(a=>a.getAttribute('href').slice(1)),h=location.hash.slice(1),prev=app.dataset.tab;
+ const cur=ids.includes(h)?h:ids.includes(prev)?prev:ids[0];app.dataset.tab=cur;if(prev&&prev!==cur)scrollTo(0,0);
+ app.querySelectorAll('main>section').forEach(s=>s.classList.toggle('show',s.id===cur));initSubs();
+ L.forEach(a=>{const on=a.getAttribute('href')==='#'+cur;a.classList.toggle('on',on);on?a.setAttribute('aria-current','true'):a.removeAttribute('aria-current')});
+ const ac=L.find(a=>a.classList.contains('on'));if(ac&&nv.scrollWidth>nv.clientWidth)nv.scrollTo({left:ac.offsetLeft-nv.clientWidth/2+ac.offsetWidth/2,behavior:'smooth'})}
+const spyReq=()=>{if(!spyQ)spyQ=requestAnimationFrame(spy)};
+addEventListener('resize',spyReq);addEventListener('hashchange',spyReq);
+new MutationObserver(spyReq).observe(document.body,{childList:true,subtree:true,attributes:true,attributeFilter:['hidden']});
+function boot(){const u=allUsers().find(x=>x.u===SS.get());if(u&&!LS('pp.disabled',[]).includes(u.u))enter(u)}
+
+semOptions($('#m-sem')); semOptions($('#markFilter'), true);
+initAll();
+let rT; addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(renderDashboard, 120); });
+/* ===== Security: salted PBKDF2 hashes, login throttle, validated import (demo seed accounts keep plain passwords so the demo buttons work) ===== */
+let FAIL={n:0,t:0};const enc=new TextEncoder(),hex=b=>[...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('');
+async function pwHash(p,s){s=s||hex(crypto.getRandomValues(new Uint8Array(16)));let h;
+ if(crypto.subtle){const k=await crypto.subtle.importKey('raw',enc.encode(p),'PBKDF2',false,['deriveBits']);h=hex(await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode(s),iterations:150000,hash:'SHA-256'},k,256))}
+ else h='x'+[...(s+p)].reduce((a,c)=>(a*31+c.charCodeAt(0))>>>0,7);
+ return{s,h}}
+const verify=async(u,p)=>u.h?(await pwHash(p,u.s)).h===u.h:u.p===p;
+function safeImport(t){if(t.length>4e6)throw 0;const o=JSON.parse(t);if(!o||typeof o!=='object'||Array.isArray(o)||!('profile' in o||'academics' in o||'marks' in o))throw 0;
+ const n=normalize(o),S=(v,l)=>String(v??'').slice(0,l);
+ n.marks=n.marks.filter(m=>m&&typeof m.subject==='string'&&isFinite(m.marks)&&+m.max>0&&+m.marks>=0&&+m.marks<=+m.max).slice(0,300).map(m=>({id:uid(),subject:S(m.subject,120),code:S(m.code,30),sem:Math.min(SEMS,Math.max(1,+m.sem||1)),marks:+m.marks,max:+m.max}));
+ n.certs=n.certs.filter(c=>c&&typeof c.title==='string').slice(0,100).map(c=>({id:uid(),title:S(c.title,120),issuer:S(c.issuer,120),category:S(c.category||'Other',40),date:/^\d{4}-\d{2}-\d{2}$/.test(c.date)?c.date:'',fileName:S(c.fileName,120),fileData:/^data:(application\/pdf|image\/(png|jpe?g|gif|webp));base64,/.test(c.fileData||'')?c.fileData:''}));
+ n.prep=n.prep.filter(p=>p&&isFinite(p.score)&&+p.max>0&&+p.score<=+p.max).slice(0,300).map(p=>({id:uid(),type:S(p.type,30),date:/^\d{4}-\d{2}-\d{2}$/.test(p.date)?p.date:'',score:+p.score,max:+p.max,note:S(p.note,200)}));
+ n.placement.skills=n.placement.skills.filter(x=>typeof x==='string').map(x=>S(x,40)).slice(0,60);
+ if(!/^data:application\/pdf;base64,/.test(n.placement.resumeData||''))n.placement.resumeData='';delete n.placement.resumeAnalysis;
+ return n}
+/* ===== Resume ATS check: reads the PDF in the browser (pdf.js, loaded on first use) and scores it against common ATS rules ===== */
+var ATSBUSY=false,ATSERR='',PDFJS;
+async function loadPdfJs(){if(PDFJS)return PDFJS;const B='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/';
+ await new Promise((ok,no)=>{const e=document.createElement('script');e.src=B+'pdf.min.js';e.onload=ok;e.onerror=no;document.head.appendChild(e)});
+ const w=await(await fetch(B+'pdf.worker.min.js')).text();pdfjsLib.GlobalWorkerOptions.workerSrc=URL.createObjectURL(new Blob([w],{type:'text/javascript'}));return PDFJS=pdfjsLib}
+async function pdfRead(buf){const P=await loadPdfJs(),doc=await P.getDocument({data:buf}).promise,out=[],links=[];
+ for(let i=1;i<=doc.numPages;i++){const pg=await doc.getPage(i),tc=await pg.getTextContent(),rows={};
+  tc.items.forEach(t=>{const y=Math.round(t.transform[5]/3);(rows[y]??=[]).push(t)});
+  Object.keys(rows).map(Number).sort((a,b)=>b-a).forEach(y=>out.push(rows[y].sort((a,b)=>a.transform[4]-b.transform[4]).map(t=>t.str).join(' ').replace(/\s+/g,' ').trim()));
+  (await pg.getAnnotations()).forEach(a=>a.url&&links.push(a.url))}
+ return{text:out.filter(Boolean).join('\n'),pages:doc.numPages,links}}
+const VERBS='built|developed|designed|implemented|created|led|managed|improved|optimi[sz]ed|reduced|increased|automated|deployed|launched|analy[sz]ed|engineered|integrated|migrated|trained|collaborated|achieved|delivered|architected|tested|resolved|organi[sz]ed|coordinated|presented|won|secured';
+const reEsc=t=>t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+function scoreResume(r){const T=r.text,L=T.toLowerCase(),words=(T.match(/\S+/g)||[]).length,pl=state.placement,role=pl.targetRole,keys=role?ROLES[role]:Object.keys(DEMAND).sort((a,b)=>DEMAND[b]-DEMAND[a]).slice(0,8),C=[];
+ const add=(l,p,m,t)=>C.push({l,p:Math.round(p*10)/10,m,t}),tm=t=>new RegExp('(^|[^a-z0-9+#])'+reEsc(t)+'($|[^a-z0-9+#])').test(L);
+ const has=k=>[k.toLowerCase(),...Object.entries(ALIAS).filter(([,v])=>v===k).map(([a])=>a)].some(tm);
+ const rd=L.length>=300?15:L.length>=100?6:0;add('Machine-readable text',rd,15,rd===15?'':'Little or no text was found. Scanned or image-only PDFs are unreadable to an ATS. Export from Word or Docs as a text PDF.');
+ const pg=r.pages<=2,wd=words>=250&&words<=900;add('Length',(pg?5:2)+(wd?5:2),10,pg&&wd?'':`${r.pages} page(s), ${words} words. Aim for 1 page (2 at most) and 300 to 800 words.`);
+ const em=/[\w.+-]+@[\w-]+\.[\w.]+/.test(T),ph=/\+?\d[\d\s().-]{8,}\d/.test(T),ln=/linkedin\.com|github\.com/i.test(T+' '+r.links.join(' '));
+ add('Contact details',(em?4:0)+(ph?3:0)+(ln?3:0),10,[!em&&'email',!ph&&'phone number',!ln&&'LinkedIn or GitHub link'].filter(Boolean).map(x=>'Add '+x).join('; '));
+ const SEC=[['Education','educat|academic'],['Experience or internships','experience|internship|employment|work history'],['Projects','projects?'],['Skills','skills|technologies|technical'],['Certifications or achievements','certif|achievement|award|honou?rs']],ms=SEC.filter(([,p])=>!new RegExp('^\\s*(?:'+p+')','im').test(T)).map(x=>x[0]);
+ add('Standard section headings',(SEC.length-ms.length)*4,20,ms.length?'No clear heading for: '+ms.join(', ')+'. ATS parsers look for standard headings.':'');
+ const hit=keys.filter(has),mis=keys.filter(k=>!has(k));add(role?`Keywords for ${role}`:'In-demand keywords',20*hit.length/keys.length,20,mis.length?'Add where you genuinely have the skill: '+mis.join(', ')+'.':'');
+ const vb=(T.match(new RegExp('^\\s*[•▪●◦*·\\-–]?\\s*(?:'+VERBS+')\\w*','gim'))||[]).length;add('Action verbs',vb>=6?10:vb>=3?5:0,10,vb>=6?'':`Only ${vb} line(s) start with a strong verb. Begin bullets with Built, Led, Reduced, etc.`);
+ const nm=(T.match(/\d+(\.\d+)?\s?%|[$₹]\s?\d|\b\d{2,}\+?\s?(users|students|requests|records|customers|ms|hours|members|participants)\b|\blpa\b/gi)||[]).length;add('Quantified impact',nm>=3?10:nm>=1?5:0,10,nm>=3?'':'Add numbers: users served, % improvement, time saved, team size.');
+ const nmOk=!state.profile.name||L.includes(state.profile.name.toLowerCase().split(/\s+/)[0]),ps=pl.skills.filter(k=>!tm(k.toLowerCase()));
+ add('Matches your profile',(nmOk?2:0)+(pl.skills.length?3*(1-ps.length/pl.skills.length):3),5,[!nmOk&&'Your name was not found on the resume.',ps.length&&'Profile skills missing from resume: '+ps.slice(0,6).join(', ')+'.'].filter(Boolean).join(' '));
+ return{score:Math.round(C.reduce((a,c)=>a+c.p,0)),pages:r.pages,words,checks:C,hit,miss:mis,role:role||'',date:new Date().toISOString()}}
+async function analyzeResume(buf){ATSBUSY=true;ATSERR='';renderAts();
+ try{state.placement.resumeAnalysis=scoreResume(await pdfRead(buf));save();toast('Resume analysed')}
+ catch(e){ATSERR='Could not read this PDF. The PDF reader loads from the internet the first time, so check your connection, or the file may be damaged or password-protected.'}
+ ATSBUSY=false;renderDashboard()}
+function renderAts(){const pl=state.placement;let el=$('#atsBox');if(!el){el=document.createElement('div');el.id='atsBox';el.className='card';el.style.marginTop='16px';$('#placement').appendChild(el)}
+ if(!pl.resumeName){el.hidden=true;return}el.hidden=false;const a=pl.resumeAnalysis,btn=pl.resumeData?`<button class="small" data-ats>${a?'Re-analyse':'Analyse resume'}</button>`:'';
+ if(!a){el.innerHTML=`<p class="sub-h">Resume ATS check</p><div class="hint" ${ATSERR?'style="color:var(--critical)"':''}>${ATSBUSY?'Analysing your resume…':esc(ATSERR)||(pl.resumeData?'Not analysed yet.':'This file is over 1 MB, so it was not stored. Re-upload a smaller PDF to get feedback.')}</div>${ATSBUSY?'':btn}`;return}
+ const g=a.score>=80?['Strong','var(--good-text)']:a.score>=60?['Good, a few fixes needed','var(--text-secondary)']:['Needs work','var(--critical)'];
+ el.innerHTML=`<div class="row" style="justify-content:space-between;align-items:center"><p class="sub-h" style="margin:0">Resume ATS check</p>${ATSBUSY?'<span class="hint">Analysing…</span>':btn}</div>
+ ${ATSERR?`<div class="hint" style="color:var(--critical)">${esc(ATSERR)}</div>`:''}
+ <div class="gap-top" style="margin:12px 0"><div class="ring" style="--p:${a.score}"><b>${a.score}</b></div><div><div class="sub-h" style="margin:0;color:${g[1]}">${g[0]}</div><div class="hint">${a.pages} page${a.pages>1?'s':''} · ${a.words} words · checked ${ago(a.date)}</div></div></div>
+ <table class="list"><tbody>${a.checks.map(c=>{const q=c.p/c.m,ic=q>=.8?['✔','var(--good-text)']:q>=.4?['!','var(--warning)']:['✕','var(--critical)'];return `<tr><td style="width:28px;color:${ic[1]};font-weight:700">${ic[0]}</td><td><b>${esc(c.l)}</b>${c.t?`<div class="hint" style="margin:0">${esc(c.t)}</div>`:''}</td><td class="num">${c.p}/${c.m}</td></tr>`}).join('')}</tbody></table>
+ <p class="sub-h" style="margin:14px 0 6px">Keywords${a.role?' for '+esc(a.role):''}</p><div class="chips">${a.hit.map(k=>`<span class="chip ok">✔ ${esc(k)}</span>`).join('')}${a.miss.map(k=>`<span class="chip no">+ ${esc(k)}</span>`).join('')}</div>
+ <div class="hint" style="margin-top:10px">An estimate based on common ATS rules, not a real employer system. Text is read in your browser and never uploaded. Your ATS score counts toward the Resume &amp; links part of your readiness (60 of its 100 points, which is 15% of the total).</div>`}
+$('#resumeFile').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;state.placement.resumeAnalysis=null;analyzeResume(await f.arrayBuffer())});
+document.addEventListener('click',async e=>{if(!e.target.closest('[data-ats]'))return;const d=state.placement.resumeData;if(!d)return toast('Re-upload the resume to analyse it.');analyzeResume(await(await fetch(d)).arrayBuffer())});
+/* ===== Learning roadmap ===== */
+function renderRoad(){const el=$('#roadBox'),r=state.placement.targetRole;if(!el)return;if(!r){el.innerHTML='';return}
+ const mine=levelsOf(state.placement),miss=ROLES[r].filter(k=>!(mine.get(k)&&LVW[mine.get(k).lv]>=.7)),RD=state.meta.road??={};
+ if(!miss.length){el.innerHTML='';return}
+ const op=new Set([...el.querySelectorAll('details[open]')].map(d=>d.dataset.k)),steps=k=>['Learn the fundamentals (course or docs)',HOWTO[k],'Add the skill with an evidence link and set your level'],
+ tot=miss.length*3,done=miss.reduce((a,k)=>a+(RD[k]||[]).filter(Boolean).length,0);
+ el.innerHTML=`<p class="sub-h" style="margin:20px 0 6px">Learning roadmap · ${Math.round(done/tot*100)}% complete</p><div class="meter"><div style="width:${done/tot*100}%"></div></div>`+miss.map(k=>`<details data-k="${esc(k)}"${op.has(k)?' open':''} style="margin-top:10px"><summary><b>${k}</b> · ${(RD[k]||[]).filter(Boolean).length}/3 steps</summary>${steps(k).map((t,i)=>`<label style="display:flex;gap:8px;align-items:start;font-weight:400;font-size:13px;margin:6px 0"><input type="checkbox" style="width:auto;margin-top:3px" data-road="${esc(k)}|${i}"${RD[k]?.[i]?' checked':''}>${esc(t)}</label>`).join('')}</details>`).join('')}
+document.addEventListener('change',e=>{const v=e.target.dataset?.road;if(!v)return;const [k,i]=v.split('|'),RD=state.meta.road??={};(RD[k]??=[false,false,false])[+i]=e.target.checked;save();renderRoad()});
+/* ===== Interview prep ===== */
+document.addEventListener('click',e=>{const l=e.target.closest('a[data-pt]');if(l)$('#pp-t').value=l.dataset.pt});
+$('#prepForm').addEventListener('submit',e=>{e.preventDefault();const sc=+$('#pp-s').value,mx=+$('#pp-m').value||100;if(sc>mx)return toast('Score cannot exceed the maximum.');
+ (state.prep??=[]).push({id:uid(),type:$('#pp-t').value,date:$('#pp-d').value,score:sc,max:mx,note:$('#pp-n').value.trim()});save();renderPrep();$('#pp-s').value=$('#pp-n').value='';toast('Session logged')});
+function renderPrep(){if(!$('#prepList'))return;if(!$('#pp-d').value)$('#pp-d').value=new Date().toISOString().slice(0,10);
+ const P=(state.prep||[]).slice().sort((a,b)=>a.date.localeCompare(b.date)),by={};P.forEach(p=>(by[p.type]??=[]).push(p));const pc=p=>p.score/p.max*100;
+ $('#prepStats').innerHTML=P.length?hb(Object.entries(by).map(([t,a])=>({l:`${t} · ${a.length}${a.length>1?` (${Math.round(pc(a[0]))}→${Math.round(pc(a.at(-1)))})`:''}`,v:avg(a.map(pc))}))):'<div class="empty">Log a session to see your trend.</div>';
+ $('#prepList').innerHTML=P.length?`<table class="list"><thead><tr><th>Date</th><th>Type</th><th class="num">Score</th><th class="num">%</th><th>Notes</th><th></th></tr></thead><tbody>${P.slice().reverse().map(p=>`<tr><td>${esc(p.date)}</td><td>${esc(p.type)}</td><td class="num">${p.score}/${p.max}</td><td class="num">${Math.round(pc(p))}</td><td>${esc(p.note)}</td><td class="num"><button class="ghost small" data-del-prep="${p.id}" aria-label="Delete session">✕</button></td></tr>`).join('')}</tbody></table>`:'<div class="empty">No sessions logged yet.</div>'}
+/* ===== Calendar ===== */
+function MT(){return LS('pp.meetings',[])}
+function renderAgenda(){const el=$('#agenda');if(!el||ME?.role!=='student')return;const td=new Date().toISOString().slice(0,10),ev=[];
+ LS('pp.drives',[]).forEach(d=>d.deadline&&ev.push({d:d.deadline,k:'Drive',t:`${d.company} · ${d.role} deadline`}));
+ (LS('pp.tasks',{})[ME.id]||[]).forEach(k=>k.due&&k.status!=='Done'&&ev.push({d:k.due,k:'Task',t:k.t}));
+ MT().filter(m=>m.sid===ME.id).forEach(m=>ev.push({d:m.date,tm:m.time,k:'Meeting',t:`${m.topic} · ${m.status}`}));
+ ev.sort((a,b)=>(a.d+(a.tm||'')).localeCompare(b.d+(b.tm||'')));
+ el.innerHTML=ev.length?ev.map(x=>`<div class="note"${x.d<td?' style="opacity:.55"':''}><b>${x.k}</b> · ${esc(x.t)}<small>${esc(x.d)}${x.tm?' '+esc(x.tm):''}${x.d<td?' · past':x.d===td?' · today':''}</small></div>`).join(''):'<div class="empty">Nothing scheduled.</div>'}
+$('#mtForm').addEventListener('submit',e=>{e.preventDefault();const m=MT();m.push({id:uid(),sid:ME.id,date:$('#mt-d').value,time:$('#mt-t').value,topic:$('#mt-n').value.trim(),status:'Requested',by:ME.name});LSset('pp.meetings',m);
+ notify(mentorOf({id:ME.id,dept:myDept()}),`${ME.name} requested a meeting on ${$('#mt-d').value} at ${$('#mt-t').value}.`);e.target.reset();renderAgenda();toast('Meeting requested')});
+function meetBlock(id){const L=MT().filter(m=>m.sid===id).sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ return `<p class="sub-h">Meetings</p>${L.map(m=>`<div class="note">${esc(m.date)} ${esc(m.time)} · ${esc(m.topic)}<small><b>${esc(m.status)}</b> ${m.status==='Requested'?`<button class="ghost small" data-mt="${m.id}|Confirmed">Confirm</button> <button class="ghost small" data-mt="${m.id}|Declined">Decline</button>`:m.status==='Confirmed'?`<button class="ghost small" data-mt="${m.id}|Done">Mark done</button>`:''}</small></div>`).join('')||'<div class="hint">None yet.</div>'}<div class="row"><div class="field"><input id="mtD" type="date" aria-label="Meeting date"></div><div class="field"><input id="mtT" type="time" aria-label="Time"></div><div class="field" style="flex:2"><input id="mtN" placeholder="Topic" aria-label="Topic"></div><div class="field" style="flex:0"><button class="small" data-addmt="${id}">Schedule</button></div></div>`}
+/* ===== Admin: applicant profile viewer (opened from the Drives > applicants table) ===== */
+(function(){
+ const css=`.ap-ov{--accent:#6a50d3;--series-1:#6a50d3;position:fixed;inset:0;background:rgba(10,12,20,.55);z-index:60;display:flex;justify-content:center;align-items:flex-start;padding:24px 12px;overflow:auto}
+.ap-ov[hidden]{display:none}
+.ap-box{background:var(--surface-1);color:var(--text-primary);border:1px solid var(--border);border-radius:16px;width:min(880px,100%);padding:22px;box-shadow:0 20px 60px rgba(0,0,0,.35);outline:none}
+.ap-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}.ap-head h3{margin:0;font-size:22px}
+.ap-act{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0 4px}.ap-act .sp{flex:1}
+.ap-act button.on{background:var(--accent);border-color:var(--accent);color:#fff;cursor:default}
+.ap-sec{margin-top:22px}.ap-sec>.sub-h{margin:0 0 8px}
+.ap-fit{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.ap-sem td{background:var(--surface-2);font-weight:650;font-size:12px;color:var(--text-secondary)}
+.ap-ov .hb b{min-width:42px}
+@media print{.ap-ov{position:static;background:none;padding:0}.ap-box{box-shadow:none;border:0}.ap-act,[data-apclose]{display:none}}`;
+ const sty=document.createElement('style');sty.textContent=css;document.head.appendChild(sty);
+ let cur=null,back=null;
+ const ov=()=>{let o=document.getElementById('apOv');if(!o){o=document.createElement('div');o.id='apOv';o.className='ap-ov';o.hidden=true;o.innerHTML='<div class="ap-box" role="dialog" aria-modal="true" aria-label="Applicant profile" tabindex="-1"></div>';document.body.appendChild(o)}return o};
+ const lnk=u=>u?(/^https?:\/\//i.test(u)?`<a href="${esc(u)}" target="_blank" rel="noopener noreferrer">${esc(u.replace(/^https?:\/\//i,''))}</a>`:esc(u)):'';
+ const row=(k,v)=>v||v===0?`<tr><td class="hint" style="width:34%">${k}</td><td>${v}</td></tr>`:'';
+ const sec=(t,b)=>`<div class="ap-sec"><p class="sub-h">${t}</p>${b}</div>`;
+ const ok=(b,t)=>`<span class="chip ${b?'ok':'no'}">${b?'✔':'✕'} ${t}</span>`;
+ function render(){
+  const box=ov().firstChild;if(!cur)return;
+  const D=LS('pp.drives',[]).find(x=>x.id===cur.d),list=LS('pp.apps',{})[cur.d]||[],A=list.find(a=>a.sid===cur.sid),s=cohortAll().find(x=>x.id===cur.sid);
+  const X='<button class="ghost" data-apclose aria-label="Close">✕</button>';
+  if(!D||!A||!s||!s.data){box.innerHTML=`<div class="ap-head"><h3>Applicant profile</h3>${X}</div><div class="empty">This application or the student profile is no longer available.</div>`;return}
+  const d=s.data,p=d.profile,pl=d.placement,a=d.academics,M=metrics(d),why=elig(s,D),idx=list.findIndex(x=>x.sid===cur.sid);
+  /* header + shortlist actions */
+  let h=`<div class="ap-head"><div><h3>${esc(s.name)} ${badgeChip(s.r)}</h3><div class="hint" style="margin:2px 0 0">Reg. no. <b>${esc(s.roll)}</b> · ${esc(DEPTS[s.dept]||s.dept)}${p.batch?' · Batch '+esc(p.batch):''}</div>
+   <div class="hint" style="margin:2px 0 0">${[p.email&&esc(p.email),p.phone&&esc(p.phone)].filter(Boolean).join(' · ')||'No contact details added'}</div></div>${X}</div>
+   <div class="hint" style="margin:10px 0 0">Applied to <b>${esc(D.company)} · ${esc(D.role)}</b>${D.pkg?' · '+esc(D.pkg)+' LPA':''} · ${ago(A.d)}${s.updatedAt?' · profile updated '+ago(s.updatedAt):''}</div>
+   <div class="ap-act" role="group" aria-label="Application decision"><span class="hint" style="margin:0">Decision:</span>${AS.map(v=>`<button class="small${v===A.status?' on':''}" data-apset="${v}"${v===A.status?' aria-pressed="true" disabled':''}>${v==='Applied'&&v!==A.status?'Reset to Applied':v}</button>`).join('')}
+   <span class="sp"></span><button class="ghost small" data-apnav="-1"${idx<=0?' disabled':''}>← Previous</button><span class="hint" style="margin:0">${idx+1} of ${list.length}</span><button class="ghost small" data-apnav="1"${idx>=list.length-1?' disabled':''}>Next →</button></div>`;
+  /* fit for this drive */
+  const need=D.skills||[];
+  h+=sec('Fit for this drive',`<div class="ap-fit">${ok(!(s.cgpa<D.minCgpa),`CGPA ${s.cgpa||'—'} (min ${D.minCgpa})`)}${D.noBack?ok(!(s.backlogs>0),s.backlogs>0?s.backlogs+' active backlog'+(s.backlogs>1?'s':''):'No active backlogs'):''}${need.map(k=>ok(s.skills.includes(k),esc(k))).join('')}</div>
+   <div class="hint" style="margin-top:8px">${why.length?'Does not meet: '+esc(why.join(', '))+'.':'Meets every eligibility criterion for this drive.'}</div>`);
+  /* KPIs */
+  const stt=s.r>=75?['Strong','var(--good-text)','✔']:s.r>=50?['On track','var(--text-secondary)','◐']:['Needs work','var(--critical)','!'];
+  h+=`<div class="grid g4" style="margin-top:20px">${tile('CGPA',M.cgpa!=null?fmt1(M.cgpa)+'<small> / 10</small>':'—',M.cgpaIsAvg?'Average of SGPAs':'Entered by student')}
+   ${tile('Career readiness',Math.round(M.readiness)+'<small>%</small>',`<span style="color:${stt[1]}">${stt[2]} ${stt[0]}</span>`,`<div class="meter" role="meter" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(M.readiness)}" aria-label="Career readiness"><div style="width:${Math.round(M.readiness)}%"></div></div>`)}
+   ${tile('Active backlogs',M.backlogs,M.backlogs?'Readiness reduced by 15%':'None')}${tile('Resume ATS',pl.resumeAnalysis?pl.resumeAnalysis.score+'<small> / 100</small>':'—',pl.resumeName?(pl.resumeAnalysis?'Analysed '+ago(pl.resumeAnalysis.date):'Not analysed'):'No resume')}</div>
+   <div class="grid g4" style="margin-top:12px">${tile('Avg subject score',M.markPct!=null?Math.round(M.markPct)+'<small>%</small>':'—',d.marks.length+' subject'+(d.marks.length===1?'':'s')+' entered')}${tile('Internships',M.internships,'')}${tile('Projects',M.projects,'')}${tile('Hackathons',M.hack,'')}</div>`;
+  /* academics */
+  const sg=a.sgpa.map((v,i)=>({i,v:num(v)})).filter(x=>x.v!=null);
+  h+=sec('Academics',`<table class="list"><tbody>${row('Registration number',esc(s.roll))}${row('10th / 12th',(a.tenth||a.twelfth)?esc((a.tenth||'—')+'% / '+(a.twelfth||'—')+'%'):'')}${row('Status',esc(dispSt(pl.status)||''))}</tbody></table>
+   ${sg.length?`<div style="margin-top:10px">${sg.map(x=>`<div class="hb"><span>Semester ${x.i+1}</span><div class="tr"><i style="width:${Math.min(100,x.v*10)}%"></i></div><b>${fmt1(x.v)}</b></div>`).join('')}</div>`:'<div class="hint">No semester SGPAs entered.</div>'}`);
+  /* subject marks */
+  const mk=d.marks.slice().sort((x,y)=>x.sem-y.sem||x.subject.localeCompare(y.subject));let last=0;
+  h+=sec(`Subject marks (${mk.length})`,mk.length?`<div class="scroll" style="max-height:300px"><table class="list"><thead><tr><th>Subject</th><th class="num">Marks</th><th class="num">%</th></tr></thead><tbody>${mk.map(m=>{const g=m.sem!==last?(last=m.sem,`<tr class="ap-sem"><td colspan="3">Semester ${m.sem}</td></tr>`):'';return g+`<tr><td>${esc(m.subject)}${m.code?` <span class="hint">${esc(m.code)}</span>`:''}</td><td class="num">${m.marks}/${m.max}</td><td class="num">${Math.round(m.marks/m.max*100)}</td></tr>`}).join('')}</tbody></table></div>`:'<div class="hint">No subject marks entered.</div>');
+  /* profile strength */
+  h+=sec('Profile strength',hb(M.strength.map(c=>({l:c.label,v:c.value}))));
+  /* skills */
+  const lv=levelsOf(pl),other=pl.skills.filter(k=>!(ALIAS[k.toLowerCase()]||CAT.find(c=>c.toLowerCase()===k.toLowerCase())));
+  h+=sec(`Skillset (${pl.skills.length})`,(lv.size?`<table class="list"><thead><tr><th>Skill</th><th>Level</th><th>Evidence</th></tr></thead><tbody>${[...lv].map(([k,v])=>`<tr><td><b>${esc(k)}</b></td><td>${esc(v.lv)}</td><td>${v.ev?lnk(v.ev)+' ✔':'<span class="hint">None provided</span>'}</td></tr>`).join('')}</tbody></table>`:'<div class="hint">No recognised skills added.</div>')+(other.length?`<div class="hint" style="margin-top:8px">Other skills listed: ${esc(other.join(', '))}</div>`:''));
+  /* target-role gap */
+  const tr=pl.targetRole;
+  if(tr&&ROLES[tr]){const nd=ROLES[tr],cov=k=>lv.get(k)&&LVW[lv.get(k).lv]>=.7,m=Math.round(nd.reduce((x,k)=>x+(lv.get(k)?wt(lv.get(k)):0),0)/nd.length*100);
+   h+=sec('Target role: '+esc(tr),`<div class="gap-top"><div class="ring" style="--p:${m}"><b>${m}%</b></div><div><div class="sub-h" style="margin:0">${nd.filter(cov).length} of ${nd.length} core skills covered</div></div></div><div class="chips" style="margin-top:8px">${nd.map(k=>`<span class="chip ${cov(k)?'ok':'no'}">${cov(k)?'✔':'+'} ${esc(k)}${lv.get(k)?' · '+lv.get(k).lv:''}</span>`).join('')}</div>`)}
+  /* certificates, resume, links, preferences */
+  h+=sec(`Certificates (${d.certs.length})`,d.certs.map(c=>`<div class="note">${esc(c.title)} ${c.fileData?`<button class="ghost small" data-fcert="${s.id}|${c.id}">View file</button>`:''}<small>${esc(c.category)} · ${esc(c.issuer||'—')}${c.date?' · '+esc(c.date):''}</small></div>`).join('')||'<div class="hint">None uploaded.</div>');
+  h+=sec('Resume, links & preferences',`<table class="list"><tbody>${row('Resume',pl.resumeName?esc(pl.resumeName)+(pl.resumeData?` <button class="small" data-fres="${s.id}">View</button>`:' <span class="hint">(file too large to store)</span>'):'')}${row('LinkedIn',lnk(pl.linkedin))}${row('GitHub',lnk(pl.github))}${row('Coding profile',esc(pl.coding||''))}${row('Preferred roles',esc(pl.roles||''))}${row('Preferred locations',esc(pl.locations||''))}</tbody></table>`);
+  /* interview prep */
+  const P=d.prep||[];
+  if(P.length){const by={};P.forEach(x=>(by[x.type]??=[]).push(x.score/x.max*100));h+=sec(`Interview prep (${P.length} sessions)`,hb(Object.entries(by).map(([t,v])=>({l:`${t} · ${v.length}`,v:avg(v)}))))}
+  /* trend, other applications, mentor notes */
+  const tb=trendBlock(s.id),ab=appsBlock(s.id),nt=LS('pp.notes',{})[s.id]||[];
+  h+=(tb?`<div class="ap-sec">${tb}</div>`:'')+(ab?`<div class="ap-sec">${ab}</div>`:'');
+  if(nt.length)h+=sec('Mentor notes',nt.slice().reverse().map(n=>`<div class="note">${esc(n.t)}<small>${esc(n.by)} · ${new Date(n.d).toLocaleDateString(undefined,{day:'numeric',month:'short'})}</small></div>`).join(''));
+  const keep=box.scrollTop;box.innerHTML=h;box.scrollTop=keep}
+ function open(d,sid,from){cur={d,sid};back=from||back;render();const o=ov();o.hidden=false;o.scrollTop=0;o.firstChild.focus()}
+ function close(){const o=ov();if(o.hidden)return;o.hidden=true;cur=null;if(back&&document.contains(back))back.focus()}
+ document.addEventListener('click',e=>{const t=e.target;
+  const v=t.closest('[data-viewapp]');if(v){const [d,sid]=v.dataset.viewapp.split('|');return open(d,sid,v)}
+  if(t.id==='apOv'||t.closest('[data-apclose]')||t.closest('[data-logout]'))return close();
+  const b=t.closest('[data-apset]');
+  if(b&&cur){const st=b.dataset.apset,A=LS('pp.apps',{}),x=(A[cur.d]||[]).find(y=>y.sid===cur.sid);
+   if(x&&x.status!==st){x.status=st;LSset('pp.apps',A);notify(cur.sid,`Your application status changed to ${st}.`);toast(st==='Applied'?'Reset to Applied':'Marked '+st);
+    const sel=document.querySelector(`select[data-appst="${cur.d}|${cur.sid}"]`);if(sel)sel.value=st;render()}
+   return}
+  const n=t.closest('[data-apnav]');
+  if(n&&cur){const L=LS('pp.apps',{})[cur.d]||[],i=L.findIndex(y=>y.sid===cur.sid)+(+n.dataset.apnav),y=L[i];if(y){cur.sid=y.sid;render();ov().scrollTop=0}}
+ });
+ document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+ addEventListener('storage',()=>{if(cur&&!ov().hidden)render()});
+})();
+(async()=>{const a=LS('pp.users',[]);let ch=0;for(const u of a)if(u.p){Object.assign(u,await pwHash(u.p));delete u.p;ch=1}if(ch)LSset('pp.users',a);boot()})();
+</script>
+</body>
+</html>
